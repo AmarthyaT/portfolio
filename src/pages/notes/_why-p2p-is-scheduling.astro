@@ -1,0 +1,100 @@
+---
+/*
+  DRAFT — NOT ROUTED, NOT PUBLISHED.
+
+  Underscore prefix keeps this file out of the build. This is the reserved slot
+  for a Field notes essay: structure and stance only, no prose yet, no numbers.
+
+  Governing rules (portfolio-kit/03-field-notes-essay.md):
+    · No measured numbers. Any figure must be arithmetic from a stated assumption.
+    · Name Petals, exo, llama.cpp RPC, distributed-llama, PipeDream at least once.
+    · No "novel", "first", "state of the art".
+    · End with one link: the ColabSwarm lab line, or its case file once it exists.
+    · 1,500–2,500 words, one idea per section, no bullet lists in the body.
+
+  When it is ready: rename to why-p2p-is-scheduling.astro, add a "Field notes"
+  entry beside the Lab, and set noindex until the first draft stops moving.
+*/
+import Base from '../../layouts/Base.astro';
+import Nav from '../../components/Nav.astro';
+import Colophon from '../../components/Colophon.astro';
+---
+
+<Base
+  title="Why P2P inference on free GPUs is mostly a scheduling problem — Amarthya T."
+  description="Draft essay. The hard part of pooling free GPUs is not splitting the model or moving tensors, but paying for failure."
+>
+  <Nav />
+
+  <main id="main" class="wrap note">
+    <p class="note__status">Draft · outline only · not published</p>
+
+    <h1 class="display">Why P2P inference on free GPUs is mostly a scheduling problem</h1>
+
+    <p class="note__standfirst">
+      The hard part of pooling free GPUs is not splitting the model or moving tensors — it is
+      deciding what to do when a node disappears without warning, and paying for that decision in
+      recomputation.
+    </p>
+
+    <ol class="note__outline">
+      <li><span class="eyebrow">01</span> The appeal — free GPUs are abundant and idle; the bottleneck is coordination under churn, not compute.</li>
+      <li><span class="eyebrow">02</span> The three bandwidths — compute, memory, network, and which one binds at each phase.</li>
+      <li><span class="eyebrow">03</span> The number that decides the architecture — model bytes against per-hop payload, and why decode sends activations.</li>
+      <li><span class="eyebrow">04</span> Failure is the dominant term — preemption arithmetic, against GPipe's and PipeDream's datacenter assumptions.</li>
+      <li><span class="eyebrow">05</span> What I would measure — recovery latency, recomputed work, resume rate, output equivalence; why "tokens lost" is the wrong headline.</li>
+      <li><span class="eyebrow">06</span> What I built — one factual paragraph, present tense, no results.</li>
+      <li><span class="eyebrow">07</span> What this means for scheduling — placement as a scheduling problem with a failure model; redundancy as a budget.</li>
+    </ol>
+  </main>
+
+  <Colophon />
+</Base>
+
+<style>
+  .note {
+    padding-block: clamp(40px, 6vw, 80px);
+    max-width: 68ch;
+  }
+
+  .note__status {
+    font-family: var(--f-mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 18px;
+  }
+
+  .note h1 {
+    font-size: clamp(30px, 4.2vw, 52px);
+    line-height: 1.02;
+    text-wrap: balance;
+  }
+
+  .note__standfirst {
+    margin-top: 20px;
+    font-family: var(--f-serif);
+    font-size: clamp(17px, 1.6vw, 21px);
+    font-style: italic;
+    line-height: 1.5;
+    color: var(--ink-soft);
+  }
+
+  .note__outline {
+    margin-top: clamp(30px, 4vw, 52px);
+    list-style: none;
+  }
+
+  .note__outline li {
+    display: grid;
+    grid-template-columns: 34px minmax(0, 1fr);
+    gap: 14px;
+    padding: 14px 0;
+    border-top: 1px solid var(--rule);
+    font-family: var(--f-mono);
+    font-size: 12px;
+    line-height: 1.6;
+    color: var(--ink-soft);
+  }
+</style>

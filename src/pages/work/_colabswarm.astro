@@ -1,0 +1,177 @@
+---
+/*
+  DRAFT — NOT ROUTED, NOT PUBLISHED.
+
+  The filename starts with an underscore, so Astro's router ignores it: this
+  file never becomes a URL and never appears in the build. It is staged here so
+  the page can be populated in one sitting once a measured number exists.
+
+  Rules that govern this file (from portfolio-kit/05-guardrails.md):
+    · Every {{PLACEHOLDER}} may be replaced only by a measured value.
+    · If a value does not exist, delete the sentence. Never estimate.
+    · No "novel", "first", "state of the art", "stable", "robust", "P2P".
+    · Do not link this page from anywhere until the results table is full.
+    · On the day it goes live, remove the ColabSwarm line from WorkIndex.astro.
+*/
+import CasePage from '../../components/case/CasePage.astro';
+import Section from '../../components/case/Section.astro';
+import Limits from '../../components/case/Limits.astro';
+
+/* Renders a literal {{PLACEHOLDER}} without tripping Astro's expression parser. */
+const ph = (name: string) => `{{${name}}}`;
+---
+
+<CasePage
+  num="05"
+  domain="Distributed systems"
+  title="ColabSwarm"
+  subtitle="What does it cost to keep a layer-split model serving when a GPU disappears mid-token?"
+  abstract="A model split across preemptible GPUs has to treat failure as routine, not exceptional. This study kills a worker at a random token position and compares two ways of continuing: replay from the last completed block boundary, or resume from the exact token position. The question is narrow and the answer has to be a number."
+  description="ColabSwarm: layer-split inference across volatile GPUs, with mid-token failover measured against boundary resume. Draft — no results yet."
+  year="2026"
+  status="Draft · results pending"
+  stack="Python · PyTorch · gRPC"
+  spec={[
+    { label: 'Problem', value: 'Free-tier GPUs are preempted without draining. Failure is the steady state, not the exception.' },
+    { label: 'Constraint', value: 'A pipeline spanning machines must recover from an abrupt kill without restarting the request.' },
+    { label: 'Approach', value: 'Contiguous layer blocks per worker, a fixed 43-byte envelope, and two resume strategies measured against each other.' },
+    { label: 'Result', value: `Unmeasured. p95 time-to-next-token is ${ph('E_P95_MS')} — this page publishes no number until it exists.` },
+  ]}
+  links={[]}
+  contents={[
+    { id: 'question', label: 'The question' },
+    { id: 'system', label: 'The system' },
+    { id: 'experiment', label: 'The experiment' },
+    { id: 'result', label: 'The result' },
+    { id: 'broke', label: 'What broke' },
+    { id: 'limits', label: 'Known limits' },
+    { id: 'reproduce', label: 'Reproduce' },
+  ]}
+  sources={[
+    { label: 'Repository', note: ph('REPO_URL') },
+    { label: 'Envelope', note: '43-byte header, CRC-32, monotonic hop counter.' },
+    { label: 'Results table', note: ph('N') + ' injections, exported as CSV.' },
+  ]}
+  next={{ num: '01', title: 'VERDICT', href: '/work/verdict' }}
+>
+  <Section id="question" num="01" label="The question" title="A machine that vanishes without warning.">
+    <p>
+      Free-tier GPUs are preempted without draining: no warning, no checkpoint, no disk. A pipeline
+      that spans machines therefore has to treat failure as routine rather than exceptional. Most
+      pipeline-parallel systems assume nodes are stable and route around the rare failure. On
+      free-tier hardware the failure is the steady state.
+    </p>
+    <p>
+      The question here is narrow. Not <em>can</em> a model be split across machines — that is
+      settled — but what recovery actually costs when a machine disappears mid-token, in latency,
+      in recomputed work, and in correctness.
+    </p>
+  </Section>
+
+  <Section id="system" num="02" label="The system" title="Contiguous blocks, one fixed envelope.">
+    <p>
+      The model is split into contiguous layer blocks, one per worker. A client holds the embedding
+      and the un-embedding, so every hop carries a hidden state of the same shape and the final GPU
+      does not need the vocabulary projection resident.
+    </p>
+    <p>
+      Each activation travels in a fixed-size envelope: a 43-byte header followed by a raw,
+      dtype-native payload. The header carries a request id, a monotonic hop counter, the exact
+      layer to resume from, the layer to stop after, the tensor shape and dtype, and a CRC-32. A
+      receiver validates the header before allocating anything, so a truncated or out-of-order
+      message is rejected cheaply.
+    </p>
+    <p>
+      The hop counter doubles as a logical clock: a duplicate hop number means a replayed envelope,
+      a jump of two means a skipped stage, and an exhausted counter means a cycle. Layers may
+      overlap between neighbouring workers; the overlap is what makes mid-token failover
+      structurally possible, because a replacement must already own the layer where the pipeline
+      stopped.
+    </p>
+  </Section>
+
+  <Section id="experiment" num="03" label="The experiment" title="Same failure, two recovery strategies.">
+    <p>
+      Two modes, same failure, same model. <strong>Boundary resume</strong> replays from the last
+      completed block boundary, which is what a re-routing scheduler does by default.
+      <strong>Exact-position resume</strong> replays from the token position where the worker died,
+      using the checkpointed hidden state and KV cache.
+    </p>
+    <p>
+      A worker is killed at a random token position, {ph('N')} times, with the same prompt and
+      sampling settings. Each run records four metrics: time-to-next-token, recomputed work, resume
+      rate, and output equivalence. The first is what the user feels. The second is the price of the
+      strategy. The third proves it is a property rather than a lucky run. The fourth proves replay
+      is correct, not merely fast.
+    </p>
+  </Section>
+
+  <Section id="result" num="04" label="The result" title="Fill only with measured values.">
+    <p>
+      No number is published on this page until it comes out of a run. An unfilled placeholder is an
+      invented number waiting to happen.
+    </p>
+    <table>
+      <thead>
+        <tr>
+          <th>Metric</th>
+          <th>Boundary resume</th>
+          <th>Exact-position resume</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>p50 time-to-next-token</td><td>{ph('B_P50_MS')} ms</td><td>{ph('E_P50_MS')} ms</td></tr>
+        <tr><td>p95 time-to-next-token</td><td>{ph('B_P95_MS')} ms</td><td>{ph('E_P95_MS')} ms</td></tr>
+        <tr><td>Recomputed work</td><td>{ph('B_RECOMPUTE')}×</td><td>{ph('E_RECOMPUTE')}×</td></tr>
+        <tr><td>Resume rate (N = {ph('N')})</td><td>{ph('B_RATE')}%</td><td>{ph('E_RATE')}%</td></tr>
+        <tr><td>Output equivalence</td><td>{ph('B_EQUIV')}</td><td>{ph('E_EQUIV')}</td></tr>
+      </tbody>
+    </table>
+    <p>One sentence of interpretation, no adjectives: what the difference means and which mode I would ship.</p>
+  </Section>
+
+  <Section id="broke" num="05" label="What broke" title="Three failures, described plainly.">
+    <p>
+      This section is the most credible part of the page. A case file with no failures reads as a
+      case file that was not really run.
+    </p>
+    <ol>
+      <li>{ph('FAILURE_ONE')} — symptom, cause, fix.</li>
+      <li>{ph('FAILURE_TWO')} — symptom, cause, fix.</li>
+      <li>{ph('FAILURE_THREE')} — symptom, cause, fix.</li>
+    </ol>
+  </Section>
+
+  <Section id="limits" num="06" label="Known limits" title="Named prior art, stated plainly.">
+    <p>
+      Layer-split pipeline inference is not new. Petals runs it across volunteer peers, exo
+      partitions models across everyday devices, and llama.cpp's RPC backend and distributed-llama
+      do it on a LAN. PipeDream's 1F1B schedule is the datacenter version of the same recovery
+      problem. What differs here is the operating condition and the measurement: free-tier GPUs are
+      preempted without draining, so the question is not whether a pipeline can span machines, but
+      what recovery costs when a machine vanishes mid-token. I do not claim a new architecture. I
+      claim a measured failure regime.
+    </p>
+    <Limits>
+      <p>
+        This setup cannot show public-swarm scale, adversarial peers, long-running stability, or
+        throughput on a healthy cluster. It is three operator-controlled workers, run briefly, with
+        fault injection triggered deliberately — which is also why it does not run a public endpoint:
+        free Colab is intended for interactive use, and a persistent inference service for third
+        parties would breach its acceptable-use policy.
+      </p>
+    </Limits>
+  </Section>
+
+  <Section id="reproduce" num="07" label="Reproduce" title="One command, pinned dependencies.">
+    <p>
+      The demo runs three workers, injects a kill at a chosen token position, and prints the four
+      metrics above. No cloud account is required for the local variant.
+    </p>
+    <pre><code>git clone {ph('REPO_URL')}
+cd {ph('REPO_DIR')}
+{ph('ONE_COMMAND')}          # three workers, healthy run
+{ph('ONE_COMMAND')} --chaos  # kill a worker mid-token</code></pre>
+    <p>Expected runtime: {ph('RUNTIME')}.</p>
+  </Section>
+</CasePage>

@@ -51,9 +51,13 @@ scripts/                     dev-only CDP capture utilities (not shipped)
 
 ## Deploy
 
-Static output, so any static host works. On Vercel: import the repo, framework preset **Astro**,
-build `npm run build`, output `dist`. `astro.config.mjs` already sets `site: https://amarthya.dev`;
-change it if the domain changes, because canonical URLs, OG image URLs and the sitemap read from it.
+Live at [amarthya.netlify.app](https://amarthya.netlify.app). Static output, so any static host
+works: `netlify.toml` pins the build command, the publish directory, and Node 22, and every push
+to `main` rebuilds.
+
+`astro.config.mjs` sets `site: https://amarthya.netlify.app`. Canonical URLs, OpenGraph URLs and
+the sitemap all read from it, so it is the one place to change when the domain changes — but
+`public/robots.txt` hard-codes the sitemap URL too, so edit both.
 
 ## Notes
 

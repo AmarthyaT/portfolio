@@ -15,6 +15,10 @@ node_modules/
 .netlify/
 .wrangler/
 
+# working documents — never part of the site
+PLAN.md
+portfolio-kit/
+
 # os / editor
 .DS_Store
 Thumbs.db
