@@ -34,10 +34,10 @@ const models = [
 <section class="section section--dark" id="lab">
   <div class="wrap">
     <div class="sec-head reveal">
-      <span class="eyebrow">03 — Model Lab</span>
+      <span class="eyebrow">03 — Lab</span>
       <h2 class="display">Weights,<br />not vibes.</h2>
       <p class="sec-head__note">
-        Two models trained, quantized and published with cards attached. Download counts read from the Hugging Face API on 16 November 2026.
+        Two models trained, quantized and published with cards attached. One system still under construction. Download counts read from the Hugging Face API on 16 November 2026.
       </p>
     </div>
 
@@ -66,8 +66,23 @@ const models = [
       ))}
     </div>
 
+    <div class="pending">
+      <div class="pending__lead">
+        <span class="eyebrow">In progress — Distributed systems</span>
+        <h3>ColabSwarm</h3>
+      </div>
+      <div class="pending__body">
+        <p>
+          Layer-split LLM inference across volatile GPUs. Measuring what mid-token recovery costs
+          when a worker is killed without warning — latency, recomputed work, and whether the output
+          survives intact.
+        </p>
+        <span class="pending__status">No measurement yet · no case file</span>
+      </div>
+    </div>
+
     <p class="lab__note">
-      The abliterated model is published as a research artifact, with a usage warning and no claim of safety. The point is the measurement, not the uncensoring.
+      The abliterated model is published as a research artifact, with a usage warning and no claim of safety. The point is the measurement, not the uncensoring. ColabSwarm sits here until a failover number exists; the line above is the whole claim until then.
     </p>
   </div>
 </section>
@@ -170,8 +185,50 @@ const models = [
     color: var(--lab-accent);
   }
 
+  .pending {
+    display: grid;
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.4fr);
+    gap: clamp(14px, 3vw, 40px);
+    padding: clamp(24px, 3vw, 34px) clamp(24px, 3vw, 36px) 0;
+    border-top: 1px solid var(--lab-rule);
+    margin-top: 1px;
+  }
+
+  .pending__lead .eyebrow {
+    color: var(--lab-ink-soft);
+  }
+
+  .pending h3 {
+    margin-top: 14px;
+    font-family: var(--f-display);
+    font-size: clamp(20px, 2vw, 26px);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+    text-transform: uppercase;
+  }
+
+  .pending__body p {
+    max-width: 54ch;
+    font-family: var(--f-serif);
+    font-size: 16px;
+    line-height: 1.5;
+    color: var(--lab-ink-soft);
+  }
+
+  .pending__status {
+    display: block;
+    margin-top: 14px;
+    font-family: var(--f-mono);
+    font-size: 9.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--lab-accent);
+  }
+
   .lab__note {
-    margin-top: 28px;
+    margin-top: clamp(28px, 3.5vw, 40px);
+    padding-inline: clamp(24px, 3vw, 36px);
     max-width: 72ch;
     font-family: var(--f-mono);
     font-size: 10.5px;
@@ -182,6 +239,10 @@ const models = [
 
   @media (max-width: 780px) {
     .models {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .pending {
       grid-template-columns: minmax(0, 1fr);
     }
   }

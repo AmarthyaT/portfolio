@@ -59,12 +59,6 @@ const supporting = [
     tag: 'In progress · causal inference',
     href: 'https://github.com/AmarthyaT',
   },
-  {
-    title: 'ColabSwarm',
-    desc: 'Layer-split LLM inference across volatile GPUs; measuring what mid-token recovery costs. No results yet.',
-    tag: 'In progress · distributed systems',
-    href: null,
-  },
 ];
 ---
 
@@ -102,27 +96,19 @@ const supporting = [
     <div class="also">
       <div class="also__head">
         <span class="eyebrow">Also in the field</span>
-        <span class="eyebrow">02 models · 01 product · 02 in progress</span>
+        <span class="eyebrow">02 models · 01 product · 01 in progress</span>
       </div>
       <ul class="also__list">
-        {supporting.map((item) => {
-          const Tag = item.href ? 'a' : 'div';
-          return (
-            <li>
-              <Tag
-                class:list={['mini', { 'mini--static': !item.href }]}
-                href={item.href ?? undefined}
-                target={item.href ? '_blank' : undefined}
-                rel={item.href ? 'noopener' : undefined}
-              >
-                <span class="mini__title">{item.title}</span>
-                <span class="mini__desc">{item.desc}</span>
-                <span class="mini__tag">{item.tag}</span>
-                <span class="mini__arrow" aria-hidden="true">{item.href ? '↗' : '—'}</span>
-              </Tag>
-            </li>
-          );
-        })}
+        {supporting.map((item) => (
+          <li>
+            <a class="mini" href={item.href} target="_blank" rel="noopener">
+              <span class="mini__title">{item.title}</span>
+              <span class="mini__desc">{item.desc}</span>
+              <span class="mini__tag">{item.tag}</span>
+              <span class="mini__arrow" aria-hidden="true">↗</span>
+            </a>
+          </li>
+        ))}
       </ul>
     </div>
   </div>
@@ -246,14 +232,6 @@ const supporting = [
 
   .mini:hover .mini__title {
     color: var(--accent);
-  }
-
-  .mini--static {
-    cursor: default;
-  }
-
-  .mini--static:hover .mini__title {
-    color: inherit;
   }
 
   .mini__desc {
