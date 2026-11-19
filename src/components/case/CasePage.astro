@@ -1,0 +1,490 @@
+---
+import Base from '../../layouts/Base.astro';
+import Nav from '../Nav.astro';
+import Colophon from '../Colophon.astro';
+
+interface Props {
+  num: string;
+  domain: string;
+  title: string;
+  subtitle: string;
+  abstract: string;
+  description: string;
+  year: string;
+  status: string;
+  stack: string;
+  spec: { label: string; value: string }[];
+  links: { label: string; href: string; note?: string }[];
+  contents: { id: string; label: string }[];
+  sources: { label: string; note: string }[];
+  next: { num: string; title: string; href: string };
+}
+
+const {
+  num,
+  domain,
+  title,
+  subtitle,
+  abstract,
+  description,
+  year,
+  status,
+  stack,
+  spec,
+  links,
+  contents,
+  sources,
+  next,
+} = Astro.props;
+---
+
+<Base title={`${title} — Amarthya T.`} description={description}>
+  <Nav />
+
+  <main id="main">
+    <header class="chead">
+      <div class="wrap">
+        <div class="chead__meta">
+          <span class="eyebrow">Case file {num} / 04</span>
+          <span class="eyebrow">{domain}</span>
+          <span class="eyebrow">Bengaluru · {year}</span>
+        </div>
+
+        <div class="chead__row">
+          <div class="chead__lead">
+            <h1 class="display chead__title">{title}</h1>
+            <p class="chead__sub">{subtitle}</p>
+          </div>
+          <span class="chead__stamp" aria-hidden="true">CASE<br />{num}</span>
+        </div>
+
+        <p class="abstract chead__abstract">{abstract}</p>
+
+        <dl class="spec">
+          {spec.map((row) => (
+            <div class="spec__cell">
+              <dt>{row.label}</dt>
+              <dd>{row.value}</dd>
+            </div>
+          ))}
+        </dl>
+
+        <div class="chead__links">
+          {links.map((link) => (
+            <a class="chead__link" href={link.href} target="_blank" rel="noopener">
+              <span>{link.label}</span>
+              <span aria-hidden="true">↗</span>
+            </a>
+          ))}
+        </div>
+      </div>
+    </header>
+
+    <div class="wrap cbody">
+      <aside class="crail">
+        <div class="crail__inner">
+          <div class="crail__group">
+            <span class="eyebrow">Record</span>
+            <dl class="crail__meta">
+              <div><dt>Domain</dt><dd>{domain}</dd></div>
+              <div><dt>Year</dt><dd>{year}</dd></div>
+              <div><dt>Status</dt><dd>{status}</dd></div>
+              <div><dt>Stack</dt><dd>{stack}</dd></div>
+            </dl>
+          </div>
+
+          <div class="crail__group">
+            <span class="eyebrow">Contents</span>
+            <ol class="crail__index">
+              {contents.map((item, i) => (
+                <li>
+                  <a href={`#${item.id}`}>
+                    <span class="crail__num">{String(i + 1).padStart(2, '0')}</span>
+                    {item.label}
+                  </a>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </div>
+      </aside>
+
+      <article class="cmain">
+        <slot />
+      </article>
+
+      <aside class="cmargin">
+        <div class="cmargin__inner">
+          <span class="eyebrow">Sources &amp; artifacts</span>
+          <ul class="cmargin__list">
+            {sources.map((source) => (
+              <li>
+                <span class="cmargin__label">{source.label}</span>
+                <span class="cmargin__note">{source.note}</span>
+              </li>
+            ))}
+          </ul>
+          <p class="cmargin__rule">
+            Figures on this page are reconstructed from the repository's own tables and commit
+            history. Nothing here is illustrative.
+          </p>
+        </div>
+      </aside>
+    </div>
+
+    <nav class="next" aria-label="Next case">
+      <a class="wrap next__in" href={next.href}>
+        <span class="eyebrow">Next case — {next.num}</span>
+        <span class="next__title display">{next.title}</span>
+        <span class="next__arrow" aria-hidden="true">→</span>
+      </a>
+    </nav>
+  </main>
+
+  <Colophon />
+</Base>
+
+<style>
+  /* ---------- head ---------- */
+
+  .chead {
+    padding-block: clamp(28px, 4vw, 52px) clamp(36px, 5vw, 64px);
+  }
+
+  .chead__meta {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .chead__row {
+    position: relative;
+    margin-top: clamp(28px, 4vw, 52px);
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 32px;
+  }
+
+  .chead__lead {
+    max-width: min(100%, 780px);
+  }
+
+  .chead__title {
+    font-size: clamp(52px, 8.6vw, 118px);
+    line-height: 0.84;
+    letter-spacing: -0.035em;
+  }
+
+  .chead__sub {
+    margin-top: 18px;
+    max-width: 44ch;
+    font-family: var(--f-serif);
+    font-size: clamp(18px, 2vw, 25px);
+    font-style: italic;
+    line-height: 1.3;
+    color: var(--ink-soft);
+  }
+
+  .chead__stamp {
+    flex: none;
+    margin-top: 6px;
+    margin-right: clamp(0px, 2vw, 22px);
+    padding: 12px 16px 11px;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    font-family: var(--f-mono);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    line-height: 1.35;
+    text-align: center;
+    transform: rotate(-4deg);
+    opacity: 0.78;
+  }
+
+  .chead__abstract {
+    max-width: 62ch;
+    margin-top: clamp(24px, 3.2vw, 40px);
+    font-size: clamp(18px, 1.8vw, 23px);
+  }
+
+  /* ---------- spec ---------- */
+
+  .spec {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 clamp(24px, 4vw, 64px);
+    margin-top: clamp(32px, 4vw, 52px);
+    border-top: 1px solid var(--rule);
+  }
+
+  .spec__cell {
+    padding: 16px 0 18px;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .spec dt {
+    font-family: var(--f-mono);
+    font-size: 9.5px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  .spec dd {
+    margin-top: 8px;
+    max-width: 46ch;
+    font-size: 14.5px;
+    line-height: 1.5;
+    color: var(--ink);
+  }
+
+  /* ---------- links ---------- */
+
+  .chead__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 28px;
+    margin-top: 22px;
+  }
+
+  .chead__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    padding-bottom: 3px;
+    border-bottom: 1px solid var(--ink);
+    font-family: var(--f-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    transition: color var(--fast) var(--ease), border-color var(--fast) var(--ease);
+  }
+
+  .chead__link:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+
+  .chead__link span:last-child {
+    font-size: 11px;
+  }
+
+  /* ---------- body grid ---------- */
+
+  .cbody {
+    display: grid;
+    grid-template-columns: 154px minmax(0, 1fr) 190px;
+    gap: clamp(28px, 4vw, 56px);
+    padding-bottom: clamp(56px, 7vw, 96px);
+    align-items: start;
+  }
+
+  .crail,
+  .cmargin {
+    position: sticky;
+    top: calc(var(--nav-h) + 24px);
+    font-family: var(--f-mono);
+  }
+
+  .crail__group + .crail__group {
+    margin-top: 30px;
+  }
+
+  .crail__group > .eyebrow {
+    display: block;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--rule);
+    color: var(--ink-faint);
+  }
+
+  .crail__meta {
+    margin-top: 4px;
+  }
+
+  .crail__meta > div {
+    padding: 9px 0;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .crail__meta dt {
+    font-size: 8.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  .crail__meta dd {
+    margin-top: 4px;
+    font-size: 11px;
+    line-height: 1.45;
+    letter-spacing: 0.01em;
+    color: var(--ink-soft);
+  }
+
+  .crail__index {
+    list-style: none;
+    margin-top: 2px;
+  }
+
+  .crail__index a {
+    display: grid;
+    grid-template-columns: 22px minmax(0, 1fr);
+    gap: 4px;
+    padding: 8px 0;
+    border-bottom: 1px solid transparent;
+    font-size: 10px;
+    line-height: 1.4;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    transition: color var(--fast) var(--ease), border-color var(--fast) var(--ease);
+  }
+
+  .crail__index a:hover {
+    color: var(--ink);
+    border-color: var(--rule-mid);
+  }
+
+  .crail__num {
+    color: var(--ink-faint);
+  }
+
+  .cmain {
+    min-width: 0;
+  }
+
+  .cmargin__group > .eyebrow,
+  .cmargin__inner > .eyebrow {
+    display: block;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--rule);
+    color: var(--ink-faint);
+  }
+
+  .cmargin__list {
+    list-style: none;
+    margin-top: 4px;
+  }
+
+  .cmargin__list li {
+    padding: 10px 0 11px;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .cmargin__label {
+    display: block;
+    font-size: 9.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+
+  .cmargin__note {
+    display: block;
+    margin-top: 3px;
+    font-size: 10px;
+    line-height: 1.5;
+    color: var(--ink-faint);
+  }
+
+  .cmargin__rule {
+    margin-top: 14px;
+    font-size: 9.5px;
+    line-height: 1.6;
+    color: var(--ink-faint);
+  }
+
+  /* ---------- next ---------- */
+
+  .next {
+    border-top: 1px solid var(--rule-strong);
+    background: var(--paper-deep);
+  }
+
+  .next__in {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: end;
+    gap: 8px 24px;
+    padding-block: clamp(28px, 4vw, 44px);
+    transition: color var(--fast) var(--ease);
+  }
+
+  .next__in:hover {
+    color: var(--accent);
+  }
+
+  .next__in .eyebrow {
+    grid-column: 1 / -1;
+    color: var(--ink-soft);
+  }
+
+  .next__title {
+    font-size: clamp(30px, 4.6vw, 58px);
+    line-height: 0.92;
+  }
+
+  .next__arrow {
+    font-size: clamp(26px, 3.4vw, 40px);
+    line-height: 1;
+    transition: transform var(--med) var(--ease);
+  }
+
+  .next__in:hover .next__arrow {
+    transform: translateX(8px);
+  }
+
+  @media (max-width: 1080px) {
+    .cbody {
+      grid-template-columns: 138px minmax(0, 1fr);
+    }
+
+    .cmargin {
+      display: none;
+    }
+  }
+
+  @media (max-width: 760px) {
+    .chead__meta {
+      flex-wrap: wrap;
+      gap: 4px 16px;
+    }
+    .chead__stamp {
+      display: none;
+    }
+
+    .cbody {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 32px;
+    }
+
+    .crail {
+      position: static;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 24px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .crail__inner {
+      display: contents;
+    }
+
+    .crail__group + .crail__group {
+      margin-top: 0;
+    }
+
+    .spec {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .spec__cell:last-child {
+      border-bottom: 0;
+    }
+  }
+</style>

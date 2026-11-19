@@ -1,0 +1,196 @@
+---
+/* Temporary route used to render public/og.png at 1200 × 630. */
+import '@fontsource-variable/archivo/index.css';
+import '@fontsource-variable/newsreader/index.css';
+import '@fontsource/ibm-plex-mono/400.css';
+
+const title = 'Amarthya Thammappa Gari';
+const thesis = 'Machine learning for messy, high-stakes data — made to explain itself.';
+
+/* A static echo of The Field: three clusters, deterministic, no runtime. */
+let seed = 20261116;
+const rand = () => {
+  seed = (seed * 1664525 + 1013904223) % 4294967296;
+  return seed / 4294967296;
+};
+
+const centers = [
+  [108, 116],
+  [308, 150],
+  [204, 326],
+];
+const nodes: { x: number; y: number; r: number; hot: boolean }[] = [];
+for (const [cx, cy] of centers) {
+  for (let i = 0; i < 24; i++) {
+    const angle = rand() * Math.PI * 2;
+    const dist = Math.pow(rand(), 0.7) * 56;
+    nodes.push({
+      x: cx + Math.cos(angle) * dist,
+      y: cy + Math.sin(angle) * dist * 0.86,
+      r: rand() > 0.9 ? 2.6 : 1.5,
+      hot: rand() > 0.85,
+    });
+  }
+}
+const links: [number, number][] = [];
+for (let i = 0; i < nodes.length; i++) {
+  for (let j = i + 1; j < nodes.length; j++) {
+    const d = Math.hypot(nodes[i].x - nodes[j].x, nodes[i].y - nodes[j].y);
+    if (d < 34) links.push([i, j]);
+  }
+}
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="robots" content="noindex" />
+    <title>OG card</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        width: 1200px;
+        height: 630px;
+        background: #f2efe6;
+        color: #111110;
+      }
+
+      .card {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        padding: 58px 64px 52px;
+        box-sizing: border-box;
+        display: grid;
+        grid-template-rows: auto 1fr auto;
+      }
+
+      .top {
+        display: flex;
+        justify-content: space-between;
+        padding-bottom: 12px;
+        border-bottom: 1px solid rgba(17, 17, 16, 0.25);
+        font-family: 'IBM Plex Mono', monospace;
+        font-size: 13px;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: rgba(17, 17, 16, 0.62);
+      }
+
+      .top span:first-child::before {
+        content: '';
+        display: inline-block;
+        width: 9px;
+        height: 9px;
+        margin-right: 12px;
+        background: #d93a1f;
+        vertical-align: 1px;
+      }
+
+      .mid {
+        align-self: center;
+        padding-block: 40px;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 380px;
+        align-items: center;
+        gap: 40px;
+      }
+
+      .field {
+        position: relative;
+        border-left: 1px solid rgba(17, 17, 16, 0.22);
+        padding-left: 28px;
+      }
+
+      .field figcaption {
+        margin-top: 10px;
+        font-family: 'IBM Plex Mono', monospace;
+        font-size: 11px;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: rgba(17, 17, 16, 0.5);
+      }
+
+      h1 {
+        margin: 0;
+        font-family: 'Archivo Variable', 'Archivo', sans-serif;
+        font-size: 86px;
+        font-weight: 700;
+        line-height: 0.9;
+        letter-spacing: -0.04em;
+        text-transform: uppercase;
+      }
+
+      .thesis {
+        margin: 26px 0 0;
+        max-width: 26ch;
+        font-family: 'Newsreader Variable', 'Newsreader', serif;
+        font-size: 31px;
+        font-style: italic;
+        line-height: 1.22;
+        color: rgba(17, 17, 16, 0.76);
+      }
+
+      .bottom {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        padding-top: 14px;
+        border-top: 1px solid rgba(17, 17, 16, 0.25);
+        font-family: 'IBM Plex Mono', monospace;
+        font-size: 13px;
+        letter-spacing: 0.13em;
+        text-transform: uppercase;
+        color: rgba(17, 17, 16, 0.6);
+      }
+
+      .accent {
+        color: #d93a1f;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <div class="top">
+        <span>{title}</span>
+        <span>Bengaluru · India</span>
+      </div>
+      <div class="mid">
+        <div>
+          <h1>State<br />space.</h1>
+          <p class="thesis">{thesis}</p>
+        </div>
+
+        <figure class="field">
+          <svg viewBox="0 0 420 420" width="350" height="350" role="img" aria-label="Static field diagram">
+            {links.map(([a, b]) => (
+              <line
+                x1={nodes[a].x}
+                y1={nodes[a].y}
+                x2={nodes[b].x}
+                y2={nodes[b].y}
+                stroke="rgba(17,17,16,0.16)"
+                stroke-width="1"
+              />
+            ))}
+            {nodes.map((node) => (
+              <circle
+                cx={node.x}
+                cy={node.y}
+                r={node.r}
+                fill={node.hot ? '#d93a1f' : 'rgba(17,17,16,0.62)'}
+              />
+            ))}
+          </svg>
+          <figcaption>Fig. 00 — the field</figcaption>
+        </figure>
+      </div>
+      <div class="bottom">
+        <span>amarthya.dev</span>
+        <span class="accent">Legal · Genomics · Transit · Alignment</span>
+      </div>
+    </div>
+  </body>
+</html>

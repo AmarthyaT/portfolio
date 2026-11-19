@@ -1,0 +1,51 @@
+---
+interface Props {
+  id: string;
+  num: string;
+  label: string;
+  title?: string;
+}
+
+const { id, num, label, title } = Astro.props;
+---
+
+<section class="csec" id={id}>
+  <div class="csec__head">
+    <span class="eyebrow">{num} — {label}</span>
+  </div>
+
+  <div class="csec__body">
+    {title && <h2 class="csec__title display">{title}</h2>}
+    <div class="prose">
+      <slot />
+    </div>
+  </div>
+
+  <slot name="figure" />
+</section>
+
+<style>
+  .csec {
+    padding-block: clamp(30px, 4vw, 46px) clamp(34px, 4vw, 52px);
+    border-top: 1px solid var(--rule);
+    scroll-margin-top: calc(var(--nav-h) + 18px);
+  }
+
+  .csec__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 18px;
+    margin-bottom: clamp(16px, 2.4vw, 26px);
+  }
+
+  .csec__head .eyebrow {
+    color: var(--ink-faint);
+  }
+
+  .csec__title {
+    margin-bottom: 18px;
+    font-size: clamp(24px, 2.6vw, 34px);
+    line-height: 1.05;
+  }
+</style>

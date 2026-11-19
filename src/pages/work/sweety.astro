@@ -1,0 +1,123 @@
+---
+import CasePage from '../../components/case/CasePage.astro';
+import Section from '../../components/case/Section.astro';
+import Plate from '../../components/case/Plate.astro';
+import Limits from '../../components/case/Limits.astro';
+import SweetySchema from '../../components/case/figures/SweetySchema.astro';
+---
+
+<CasePage
+  num="04"
+  domain="Clinical software"
+  title="Sweety"
+  subtitle="A glucose tracker with a clinician on the other side."
+  abstract="A patient records up to four readings a day. A doctor reads the same numbers in a different frame. Sweety is a small clinical data system built around that split — with every rule enforced in the service and again in the database."
+  description="Sweety: a blood glucose tracker with four daily slots, three report ranges, and a doctor role, built on Express, PostgreSQL, Redis and React."
+  year="2026"
+  status="Repository · Docker stack"
+  stack="Node · PostgreSQL · Redis · React"
+  spec={[
+    { label: 'Problem', value: 'A home glucose log is only useful if the numbers can be trusted and read.' },
+    { label: 'Constraint', value: 'Four fixed slots, one reading per slot per day, 40–600 mg/dl, two roles.' },
+    { label: 'Approach', value: 'Express and PostgreSQL, constraints plus a trigger, cached reports, a reminder job.' },
+    { label: 'Result', value: '61 server tests and 6 client tests, a Docker Compose stack, and a doctor workspace.' },
+  ]}
+  links={[
+    { label: 'Code', href: 'https://github.com/AmarthyaT/sweety_Blood-G' },
+    { label: 'API reference', href: 'https://github.com/AmarthyaT/sweety_Blood-G/blob/main/docs/DOCUMENTATION.md' },
+    { label: 'Schema', href: 'https://github.com/AmarthyaT/sweety_Blood-G/blob/main/server/src/db/schema.sql' },
+  ]}
+  contents={[
+    { id: 'question', label: 'The question' },
+    { id: 'method', label: 'The method' },
+    { id: 'result', label: 'The result' },
+    { id: 'limits', label: 'Known limits' },
+  ]}
+  sources={[
+    { label: 'Repository', note: 'Client, API, worker, schema, seed.' },
+    { label: 'Tests', note: '61 server, 6 client, real Postgres.' },
+    { label: 'Screenshots', note: 'Ten states in docs/screenshots.' },
+  ]}
+  next={{ num: '01', title: 'VERDICT', href: '/work/verdict' }}
+>
+  <Section id="question" num="01" label="The question" title="A record kept by the least reliable witness.">
+    <p>
+      A glucose log is kept by the person with the least incentive to record the bad days. The design
+      problem is not the chart. It is making the four daily readings cheap enough to enter, strict
+      enough to trust, and readable by someone who was not there.
+    </p>
+    <p>
+      The second user is the doctor. They need the same readings without the patient's navigation,
+      and they should only see patients assigned to them.
+    </p>
+  </Section>
+
+  <Section id="method" num="02" label="The method" title="Four slots, and a rule that holds twice.">
+    <p>
+      Four slots: morning fasting, after breakfast, after lunch, after dinner. One reading per slot
+      per day, between 40 and 600 mg/dl, and no future dates. A day with three readings is a complete
+      day with a gap, not an error.
+    </p>
+    <p>
+      The rules are enforced twice. The service returns the assignment's message, and PostgreSQL holds
+      a unique constraint, a check constraint and a trigger that refuses a fifth reading. If two
+      requests race, the database wins.
+    </p>
+    <p>
+      Reports are daily, month-to-date, and the previous calendar month. The average is rounded once,
+      in SQL. Redis caches report responses for 300 seconds and every write invalidates them; if
+      Redis is unavailable the API reads through to PostgreSQL. A BullMQ job scans at 08:00 for
+      patients with fewer than four readings and writes a reminder log.
+    </p>
+    <p>
+      Access is scoped at the query level, not in the client. Doctor assignment is by email, and the
+      role in the token is not trusted — session restore calls <span class="mono-note">/auth/me</span>.
+    </p>
+
+    <Fragment slot="figure">
+      <Plate
+        num="04"
+        title="Schema and enforcement"
+        caption="Four tables, one derived report surface. The constraints are not validation theatre: they make an invalid reading impossible if a request races another."
+      >
+        <SweetySchema />
+      </Plate>
+    </Fragment>
+  </Section>
+
+  <Section id="result" num="03" label="The result" title="Tested against a real database.">
+    <p>
+      Sixty-one server tests and six client tests run against a real PostgreSQL database, not mocks.
+      They cover password hashing, duplicate email, login failure, reading CRUD, ownership isolation,
+      every validation message, the four-per-day limit, pagination, all three report ranges, doctor
+      access, and reminder idempotency.
+    </p>
+    <p>
+      The whole stack runs with <span class="mono-note">docker compose up</span>: client, API, worker,
+      PostgreSQL 16 and Redis 7. The seed gives two patients roughly 50 and 24 days of readings and
+      assigns both to one doctor, so an empty state is a choice rather than the default.
+    </p>
+  </Section>
+
+  <Section id="limits" num="04" label="Known limits">
+    <Limits>
+      <p>
+        The JWT is stored in <span class="mono-note">localStorage</span>. That is simple and testable,
+        and readable by injected JavaScript; a production build would use httpOnly cookies, refresh
+        rotation, CSRF protection and rate limiting on login.
+      </p>
+      <p>
+        "Today" is the server's UTC date. A patient in India entering a late-night reading can land
+        on the wrong calendar day; per-user timezones are the fix, and they are not implemented.
+      </p>
+      <p>
+        Doctor assignment is by email with no invitation flow or admin role. The monthly report is the
+        previous calendar month, not the last 30 days. The UI reads one day at a time even though the
+        API paginates all readings.
+      </p>
+      <p>
+        There is no live demo in this build. The repository runs locally with Docker.
+      </p>
+    </Limits>
+  </Section>
+</CasePage>

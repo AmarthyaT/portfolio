@@ -1,0 +1,133 @@
+---
+/* Routing and refusal in VERDICT — reconstructed from the pipeline in the repo. */
+---
+
+<svg viewBox="0 0 720 330" role="img" aria-label="VERDICT query routing: fuzzy case match, semantic search, and refusal">
+  <defs>
+    <marker id="vt-ar" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0 0 L8 4 L0 8 z" fill="rgba(17,17,16,0.55)" />
+    </marker>
+  </defs>
+
+  <!-- column labels -->
+  <text class="mini" x="16" y="14">QUERY</text>
+  <text class="mini" x="244" y="14">ROUTING</text>
+  <text class="mini" x="500" y="14">OUTPUT</text>
+
+  <!-- query -->
+  <rect class="box" x="16" y="24" width="170" height="58" />
+  <text class="label" x="28" y="44">QUESTION</text>
+  <text class="desc" x="28" y="62">a case name, a section,</text>
+  <text class="desc" x="28" y="75">or a claim about the law</text>
+
+  <!-- fuzzy -->
+  <rect class="box" x="244" y="24" width="220" height="58" />
+  <text class="label" x="256" y="44">CASE NAME → CATALOG</text>
+  <text class="desc" x="256" y="62">Token Set Ratio ≥ 75</text>
+  <text class="tag" x="256" y="75">1,000+ SUPREME COURT ENTRIES</text>
+
+  <!-- semantic -->
+  <rect class="box" x="244" y="112" width="220" height="58" />
+  <text class="label" x="256" y="132">SEMANTIC SEARCH</text>
+  <text class="desc" x="256" y="150">top-k child chunks,</text>
+  <text class="desc" x="256" y="163">bge-base-en-v1.5</text>
+
+  <!-- guardrail -->
+  <rect class="box box--accent" x="244" y="200" width="220" height="58" />
+  <text class="label label--accent" x="256" y="220">NO GROUNDED CHUNK</text>
+  <text class="desc" x="256" y="238">distance stays above 0.75</text>
+  <text class="tag" x="256" y="251">THE SYSTEM DECLINES</text>
+
+  <!-- outputs -->
+  <rect class="box" x="500" y="24" width="204" height="58" />
+  <text class="label" x="512" y="44">WHOLE JUDGMENT</text>
+  <text class="desc" x="512" y="62">parent context, fetched</text>
+  <text class="desc" x="512" y="75">and synthesised</text>
+
+  <rect class="box" x="500" y="112" width="204" height="58" />
+  <text class="label" x="512" y="132">CITED ANSWER</text>
+  <text class="desc" x="512" y="150">11-section digest,</text>
+  <text class="desc" x="512" y="163">chunk scores exposed</text>
+
+  <rect class="box box--accent" x="500" y="200" width="204" height="58" />
+  <text class="label label--accent" x="512" y="220">DOCTRINAL OVERVIEW</text>
+  <text class="desc" x="512" y="238">no invented citation,</text>
+  <text class="desc" x="512" y="251">stated as such</text>
+
+  <!-- arrows -->
+  <path class="wire" d="M186 53 H238" marker-end="url(#vt-ar)" />
+  <path class="wire" d="M342 82 V106" marker-end="url(#vt-ar)" />
+  <path class="wire" d="M464 140 H494" marker-end="url(#vt-ar)" />
+  <path class="wire" d="M464 53 H494" marker-end="url(#vt-ar)" />
+  <path class="wire" d="M342 170 V194" marker-end="url(#vt-ar)" />
+  <path class="wire" d="M464 229 H494" marker-end="url(#vt-ar)" />
+
+  <!-- footnote -->
+  <line class="rule" x1="16" y1="288" x2="704" y2="288" />
+  <text class="foot" x="16" y="306">A fictional case never enters retrieval. It is routed to a separate analysis grounded in Article 14,</text>
+  <text class="foot" x="16" y="320">natural justice and proportionality — and labelled as hypothetical.</text>
+</svg>
+
+<style>
+  .box {
+    fill: rgba(17, 17, 16, 0.025);
+    stroke: rgba(17, 17, 16, 0.28);
+    stroke-width: 1;
+  }
+
+  .box--accent {
+    fill: rgba(217, 58, 31, 0.035);
+    stroke: rgba(217, 58, 31, 0.55);
+  }
+
+  .mini {
+    font-family: var(--f-mono);
+    font-size: 8px;
+    letter-spacing: 0.18em;
+    fill: rgba(17, 17, 16, 0.42);
+  }
+
+  .label {
+    font-family: var(--f-mono);
+    font-size: 8.5px;
+    font-weight: 500;
+    letter-spacing: 0.11em;
+    fill: #111110;
+  }
+
+  .label--accent {
+    fill: #b3301a;
+  }
+
+  .tag {
+    font-family: var(--f-mono);
+    font-size: 7.5px;
+    letter-spacing: 0.08em;
+    fill: rgba(17, 17, 16, 0.42);
+  }
+
+  .desc {
+    font-family: var(--f-serif);
+    font-size: 11px;
+    font-style: italic;
+    fill: rgba(17, 17, 16, 0.62);
+  }
+
+  .wire {
+    fill: none;
+    stroke: rgba(17, 17, 16, 0.34);
+    stroke-width: 1;
+  }
+
+  .rule {
+    stroke: rgba(17, 17, 16, 0.16);
+    stroke-width: 1;
+  }
+
+  .foot {
+    font-family: var(--f-serif);
+    font-size: 10.5px;
+    font-style: italic;
+    fill: rgba(17, 17, 16, 0.5);
+  }
+</style>

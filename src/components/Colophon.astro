@@ -1,0 +1,131 @@
+---
+const year = new Date().getFullYear();
+const updated = new Intl.DateTimeFormat('en-GB', {
+  day: 'numeric',
+  month: 'short',
+  year: 'numeric',
+}).format(new Date());
+const home = Astro.url.pathname === '/' ? '' : '/';
+---
+
+<footer class="colophon">
+  <div class="wrap">
+    <div class="colophon__grid">
+      <div class="colophon__block">
+        <span class="eyebrow">Colophon</span>
+        <p>
+          A static Astro build. The Field plots a thousand points per substrate and every edge
+          between them on a 2D canvas — no WebGL, no animation library, no template.
+        </p>
+      </div>
+
+      <div class="colophon__block">
+        <span class="eyebrow">Index</span>
+        <a href={`${home}#work`}>Work</a>
+        <a href={`${home}#method`}>Method</a>
+        <a href={`${home}#lab`}>Lab</a>
+        <a href={`${home}#elsewhere`}>Elsewhere</a>
+        <a href={`${home}#contact`}>Contact</a>
+      </div>
+
+      <div class="colophon__block">
+        <span class="eyebrow">Built with</span>
+        <p>
+          Astro and TypeScript. Canvas 2D. Type set in Archivo, IBM Plex Mono and Newsreader.
+          No trackers, no cookie banner.
+        </p>
+      </div>
+
+      <div class="colophon__block">
+        <span class="eyebrow">Back</span>
+        <a class="colophon__top" href={`${home}#top`}>Top of page <span aria-hidden="true">↑</span></a>
+      </div>
+    </div>
+
+    <div class="colophon__bar">
+      <span>© {year} Amarthya Thammappa Gari</span>
+      <span>Bengaluru, Karnataka, India</span>
+      <span>Last updated {updated}</span>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .colophon {
+    border-top: 1px solid var(--rule-strong);
+    padding-block: clamp(36px, 4.5vw, 56px) 18px;
+  }
+
+  .colophon__grid {
+    display: grid;
+    grid-template-columns: 1.7fr 0.8fr 1.4fr 0.6fr;
+    gap: clamp(24px, 3.5vw, 56px);
+  }
+
+  .colophon__block {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .colophon__block .eyebrow {
+    color: var(--ink-faint);
+    margin-bottom: 4px;
+  }
+
+  .colophon__block p {
+    font-family: var(--f-mono);
+    font-size: 10.5px;
+    line-height: 1.65;
+    color: var(--ink-soft);
+    max-width: 40ch;
+  }
+
+  .colophon__block a {
+    font-family: var(--f-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.04em;
+    color: var(--ink-soft);
+    width: fit-content;
+    border-bottom: 1px solid transparent;
+    transition: color var(--fast) var(--ease), border-color var(--fast) var(--ease);
+  }
+
+  .colophon__block a:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+
+  .colophon__top {
+    display: inline-flex;
+    gap: 8px;
+  }
+
+  .colophon__bar {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 8px 24px;
+    margin-top: clamp(32px, 4vw, 52px);
+    padding-top: 12px;
+    border-top: 1px solid var(--rule);
+    font-family: var(--f-mono);
+    font-size: 9.5px;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  @media (max-width: 900px) {
+    .colophon__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 32px 24px;
+    }
+  }
+
+  @media (max-width: 560px) {
+    .colophon__grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>

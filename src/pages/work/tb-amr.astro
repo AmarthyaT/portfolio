@@ -1,0 +1,128 @@
+---
+import CasePage from '../../components/case/CasePage.astro';
+import Section from '../../components/case/Section.astro';
+import Plate from '../../components/case/Plate.astro';
+import Limits from '../../components/case/Limits.astro';
+import ShapDrivers from '../../components/case/figures/ShapDrivers.astro';
+---
+
+<CasePage
+  num="02"
+  domain="Genomics"
+  title="TB-AMR"
+  subtitle="Ranking the mutations that make tuberculosis resistant."
+  abstract="A clinical TB callset contains thousands of variants, most of them passengers. This pipeline narrows 600 isolates and 158 loci to a ranked list of mutations a biologist could actually test — and puts an uncharacterised membrane protein third."
+  description="TB-AMR: XGBoost and TreeSHAP over a 600 × 158 SNP matrix, separating resistance drivers from passenger mutations."
+  year="2026"
+  status="Collaboration · Pipeline & SHAP"
+  stack="Python · XGBoost · TreeSHAP"
+  spec={[
+    { label: 'Problem', value: 'Most SNPs in a resistance callset are passengers, not causes.' },
+    { label: 'Constraint', value: '600 isolates × 158 loci, class imbalance, and no wet-lab validation.' },
+    { label: 'Approach', value: 'MAF filtering, a stratified split, XGBoost with L1/L2, and TreeSHAP ranking.' },
+    { label: 'Result', value: 'Test ROC-AUC 0.997; known targets rank first and second, a novel efflux candidate third.' },
+  ]}
+  links={[
+    { label: 'Code', href: 'https://github.com/Pavithra-Bandaru/TB-AMR-Variant-ML-1' },
+    { label: 'Metrics', href: 'https://github.com/Pavithra-Bandaru/TB-AMR-Variant-ML-1/blob/main/results/tables/model_performance.csv' },
+    { label: 'SHAP table', href: 'https://github.com/Pavithra-Bandaru/TB-AMR-Variant-ML-1/blob/main/results/tables/top_driver_mutations.csv' },
+  ]}
+  contents={[
+    { id: 'question', label: 'The question' },
+    { id: 'method', label: 'The method' },
+    { id: 'result', label: 'The result' },
+    { id: 'change', label: 'What it changes' },
+    { id: 'limits', label: 'Known limits' },
+  ]}
+  sources={[
+    { label: 'Repository', note: 'Pipeline, CLI, Streamlit dashboard.' },
+    { label: 'Model metrics', note: 'Held-out test set, N = 120.' },
+    { label: 'Driver table', note: 'Mean |SHAP| by locus, annotation.' },
+  ]}
+  next={{ num: '03', title: 'Karnataka transit', href: '/work/karnataka-transit' }}
+>
+  <Section id="question" num="01" label="The question" title="Which mutations deserve a wet lab?">
+    <p>
+      Tuberculosis resistance is not one mutation. <em>katG</em> and <em>rpoB</em> explain a large
+      share of first-line resistance, but 25–40% of the <em>M. tuberculosis</em> genome is still
+      annotated as hypothetical or uncharacterised, and efflux channels can purge a drug before it
+      ever reaches its target.
+    </p>
+    <p>
+      The practical question for a clinical callset is not <em>is this isolate resistant</em> — a
+      laboratory can answer that. It is <em>which of these 158 loci should anyone bother
+      validating?</em>
+    </p>
+  </Section>
+
+  <Section id="method" num="02" label="The method" title="Two ensembles, then one explanation.">
+    <p>
+      Start with a 600 × 158 binary SNP matrix. Filter on minor-allele frequency, split 80/20 in a
+      stratified way, run five-fold cross-validation, and train two ensembles: XGBoost with L1 and L2
+      regularisation, and a balanced random forest. Class imbalance is handled with <span class="mono-note">scale_pos_weight</span>
+      and balanced class weights.
+    </p>
+    <p>
+      TreeSHAP then ranks loci by mean absolute contribution. That is the deliverable: not a
+      black-box score, but an ordered list of mutations a biologist could test, with the known
+      targets acting as a sanity check on the ranking.
+    </p>
+  </Section>
+
+  <Section id="result" num="03" label="The result" title="The model finds the known targets, then something else.">
+    <p>
+      On the withheld 120-isolate test set, XGBoost reached 96.7% accuracy, 0.958 F1, 0.997 ROC-AUC
+      and 0.995 PR-AUC; five-fold cross-validation ROC-AUC was 0.991 ± 0.007. The balanced forest was
+      marginally higher at 97.5% accuracy and 0.968 F1 — which is a reason to check the split, not a
+      reason to prefer it.
+    </p>
+    <p>
+      SHAP put <em>katG</em> S315T and <em>rpoB</em> S450L first and second, as it should. Third was <em>novM</em>
+      G214R, a membrane/efflux candidate with no established resistance role, at 0.738 mean |SHAP| —
+      ahead of <em>gyrA</em> D94G. Two neutral loci were kept as controls and ranked below <em>pncA</em> H57D.
+    </p>
+
+    <Fragment slot="figure">
+      <Plate
+        num="02"
+        title="Driver and passenger loci by mean |SHAP|"
+        caption="Top ten loci from the trained XGBoost model. Vermilion marks the two uncharacterised membrane candidates; the neutral loci are shown to make the separation visible."
+      >
+        <ShapDrivers />
+      </Plate>
+    </Fragment>
+  </Section>
+
+  <Section id="change" num="04" label="What it changes" title="A hypothesis with a number attached.">
+    <p>
+      The deliverable is a ranked candidate list plus a dashboard, not a diagnostic. <em>novM</em> G214R and
+      <em>novM</em> L108P are hypotheses; the useful next step is a knock-out experiment, not a clinical
+      deployment.
+    </p>
+    <p>
+      The whole run is reproducible from a single command. <span class="mono-note">main.py</span> executes
+      generation or VCF parsing, filtering, training, cross-validation, benchmarking and SHAP
+      extraction; the Streamlit app exposes the same results for inspection.
+    </p>
+  </Section>
+
+  <Section id="limits" num="05" label="Known limits">
+    <Limits>
+      <p>
+        The published metrics come from the bundled synthetic cohort generator. A ROC-AUC of 0.997 on
+        generated data measures whether the pipeline can recover the signal it was built to recover;
+        it is not evidence about clinical isolates. A VCF path for real SRA and BV-BRC data exists,
+        but no real-cohort benchmark is published.
+      </p>
+      <p>
+        158 loci is a panel, not a genome. Epistatic effects outside it are invisible, and the model
+        cannot distinguish a resistance mutation from a lineage marker that happens to travel with
+        one.
+      </p>
+      <p>
+        <em>novM</em> G214R is a statistical candidate. SHAP ranks contribution to this model's
+        output, not causation in the organism.
+      </p>
+    </Limits>
+  </Section>
+</CasePage>

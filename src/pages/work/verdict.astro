@@ -1,0 +1,141 @@
+---
+import CasePage from '../../components/case/CasePage.astro';
+import Section from '../../components/case/Section.astro';
+import Plate from '../../components/case/Plate.astro';
+import Limits from '../../components/case/Limits.astro';
+import VerdictTrace from '../../components/case/figures/VerdictTrace.astro';
+---
+
+<CasePage
+  num="01"
+  domain="Legal retrieval"
+  title="VERDICT"
+  subtitle="A legal RAG system that refuses to invent a case."
+  abstract="Indian Supreme Court judgments are long, cross-referenced, and unforgiving of a wrong citation. VERDICT retrieves at the paragraph level, generates from the document level, and declines to answer when the evidence is not there."
+  description="VERDICT: parent–child legal retrieval over 1,000+ Supreme Court judgments, with fuzzy case routing and a semantic refusal threshold."
+  year="2026"
+  status="Repository · Retrieval system"
+  stack="Python · ChromaDB · Streamlit"
+  spec={[
+    { label: 'Problem', value: 'An answer that cites a case must cite it correctly.' },
+    { label: 'Constraint', value: 'Judgments run to hundreds of pages; embedding windows cut the reasoning away from the holding.' },
+    { label: 'Approach', value: 'Parent–child chunking, fuzzy case routing, a semantic refusal threshold, and two generation modes.' },
+    { label: 'Result', value: 'A working Streamlit system over 1,000+ judgments, with the ingestion and retrieval pipeline in the repository.' },
+  ]}
+  links={[
+    { label: 'Code', href: 'https://github.com/AmarthyaT/Verdict-Legal_Judgment_RAG' },
+    { label: 'Summarizer', href: 'https://huggingface.co/Amarthya11/Llama3.1-finetuned-GGUF' },
+  ]}
+  contents={[
+    { id: 'question', label: 'The question' },
+    { id: 'method', label: 'The method' },
+    { id: 'refusal', label: 'What it refuses' },
+    { id: 'result', label: 'The result' },
+    { id: 'limits', label: 'Known limits' },
+  ]}
+  sources={[
+    { label: 'Repository', note: 'Pipeline, evaluation suite, commit history.' },
+    { label: 'Guardrail', note: '0.75 distance threshold, surfaced in the UI.' },
+    { label: 'Llama 3.1 GGUF', note: 'QLoRA summarizer, Q4_K_M and Q8_0.' },
+  ]}
+  next={{ num: '02', title: 'TB-AMR', href: '/work/tb-amr' }}
+>
+  <Section id="question" num="01" label="The question" title="A wrong citation is worse than no answer.">
+    <p>
+      Ask a general model for a Supreme Court precedent and it will often give you one. The name will
+      sound plausible. The citation will be wrong. The failure is not that the model is ignorant of
+      law; it is that legal writing is long, cross-referential and structured, and a short embedding
+      window cuts the reasoning away from the holding.
+    </p>
+    <p>
+      VERDICT was built around a narrower question: can retrieval be made to carry the burden of
+      proof? If the system cannot find a passage it can point to, it should not answer.
+    </p>
+  </Section>
+
+  <Section id="method" num="02" label="The method" title="Retrieve small. Generate from the whole.">
+    <p>
+      Judgments are chunked twice. Child chunks — paragraph-level — are embedded and searched; the
+      parent document is what the generator reads. Retrieval precision comes from the child,
+      narrative coherence from the parent.
+    </p>
+    <p>
+      Queries take two routes. If the question names a case, an LLM extracts the name and a Token Set
+      Ratio match against a catalog of more than 1,000 Supreme Court entries routes straight to the
+      whole judgment. If it does not, semantic search returns the nearest child chunks.
+    </p>
+    <p>
+      The guardrail is a distance. At a threshold of 0.75 the system either answers from retrieved
+      text or declines and produces a doctrinal overview instead. A separate path catches fictional
+      cases and grounds the analysis in Article 14, natural justice and proportionality without
+      pretending the case exists.
+    </p>
+    <p>
+      Generation runs in two modes: Ollama with Llama 3 8B and <span class="mono-note">bge-base-en-v1.5</span> entirely
+      local, or Gemini 2.5 Flash for synthesis with local embeddings. The digest follows an
+      eleven-section template.
+    </p>
+
+    <Fragment slot="figure">
+      <Plate
+        num="01"
+        title="Routing and refusal"
+        caption="One query, three exits. The system only synthesises when a retrieved passage can support the sentence; otherwise it says so and changes register."
+      >
+        <VerdictTrace />
+      </Plate>
+    </Fragment>
+  </Section>
+
+  <Section id="refusal" num="03" label="What it refuses" title="A refusal is only useful if it is legible.">
+    <p>
+      The dashboard shows the ranked chunk distances, the route the query took, and the exact context
+      passed to the model. A wrong answer can therefore be traced to a retrieval step instead of
+      argued about at the output.
+    </p>
+    <p>
+      The fictional-case path is deliberately not a refusal. A hypothetical bench test is a real way
+      to probe doctrine; the system answers it as doctrine and labels it hypothetical. That
+      distinction — unknown case versus invented case — is the whole design in one decision.
+    </p>
+  </Section>
+
+  <Section id="result" num="04" label="The result" title="What actually runs.">
+    <p>
+      VERDICT is a Streamlit application over a Chroma store of more than 1,000 Supreme Court
+      judgments, with an instruction-tuned Llama 3.1 8B — QLoRA, two GGUF quantisations — as the
+      local summariser.
+    </p>
+    <ul>
+      <li>Local mode: Ollama, Llama 3 8B, BGE embeddings, no network call.</li>
+      <li>Cloud mode: Gemini 2.5 Flash for synthesis, local retrieval unchanged.</li>
+      <li>Routing: fuzzy case match at Token Set Ratio ≥ 75, then semantic search.</li>
+      <li>Guardrail: a 0.75 distance threshold, surfaced in the interface rather than hidden.</li>
+    </ul>
+  </Section>
+
+  <Section id="limits" num="05" label="Known limits">
+    <Limits>
+      <p>
+        Citation accuracy is not published here. The evaluation harness generates synthetic RAGAS
+        pairs, and a synthetic set is not a lawyer's judgment of a correct citation. Until a blind
+        review exists, what is demonstrated is the pipeline's behaviour — routing, refusal,
+        provenance — not its legal correctness.
+      </p>
+      <p>
+        The corpus is Supreme Court only. High Court reasoning, repeals and amendments sit outside
+        it, and a confident answer about a repealed provision is exactly the failure the distance
+        guardrail cannot catch.
+      </p>
+      <p>
+        The repository ships the ingestion and retrieval code, not a prebuilt index. Reproducing the
+        corpus means running ingestion against your own judgment PDFs, which is hours of work and
+        an embedding bill, not a download.
+      </p>
+      <p>
+        Case-name extraction is itself an LLM call. A misread name falls through to semantic search,
+        which is survivable, but it means two probabilistic steps stand in front of the evidence.
+      </p>
+    </Limits>
+  </Section>
+</CasePage>

@@ -1,0 +1,162 @@
+---
+const links = [
+  ['#work', 'Work'],
+  ['#method', 'Method'],
+  ['#lab', 'Lab'],
+  ['#elsewhere', 'Elsewhere'],
+  ['#contact', 'Contact'],
+];
+
+/* Case pages live one level down, so anchors need to point home. */
+const home = Astro.url.pathname === '/' ? '' : '/';
+---
+
+<header class="nav">
+  <div class="wrap nav__in">
+    <a class="brand" href={`${home}#top`} aria-label="Amarthya T. — back to top">
+      <span class="brand__mark" aria-hidden="true"></span>
+      <span>Amarthya T.</span>
+    </a>
+
+    <nav class="nav__links" aria-label="Primary">
+      {links.map(([href, label]) => <a href={`${home}${href}`}>{label}</a>)}
+    </nav>
+
+    <div class="nav__end">
+      <span class="nav__status">
+        <i aria-hidden="true"></i>
+        Open to work
+      </span>
+      <a class="btn btn--tiny" href="/Amarthya_T_Resume_cr.pdf" download>CV <span aria-hidden="true">↓</span></a>
+    </div>
+  </div>
+</header>
+
+<style>
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: color-mix(in srgb, var(--paper) 94%, transparent);
+    border-bottom: 1px solid var(--rule);
+    backdrop-filter: blur(6px);
+  }
+
+  .nav__in {
+    height: var(--nav-h);
+    display: flex;
+    align-items: center;
+    gap: 32px;
+  }
+
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    font-family: var(--f-mono);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .brand__mark {
+    width: 8px;
+    height: 8px;
+    background: var(--accent);
+    display: inline-block;
+  }
+
+  .nav__links {
+    display: flex;
+    gap: clamp(16px, 2.2vw, 30px);
+    margin-left: auto;
+  }
+
+  .nav__links a {
+    font-family: var(--f-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    padding-block: 4px;
+    border-bottom: 1px solid transparent;
+    transition: color var(--fast) var(--ease), border-color var(--fast) var(--ease);
+  }
+
+  .nav__links a:hover {
+    color: var(--ink);
+    border-color: var(--accent);
+  }
+
+  .nav__end {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin-left: 8px;
+  }
+
+  .nav__status {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-family: var(--f-mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    white-space: nowrap;
+  }
+
+  .nav__status i {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    animation: pulse 2.6s var(--ease) infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.25; }
+  }
+
+  .btn--tiny {
+    padding: 9px 12px;
+    font-size: 10px;
+    gap: 10px;
+    white-space: nowrap;
+  }
+
+  @media (max-width: 1080px) {
+    .nav__status { display: none; }
+  }
+
+  @media (max-width: 860px) {
+    .nav {
+      position: static;
+    }
+
+    .nav__in {
+      height: auto;
+      flex-wrap: wrap;
+      padding-block: 12px 0;
+      gap: 10px 20px;
+    }
+
+    .nav__links {
+      order: 3;
+      width: 100%;
+      margin: 0;
+      gap: 20px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      padding-bottom: 10px;
+    }
+
+    .nav__links::-webkit-scrollbar { display: none; }
+
+    .nav__end { margin-left: auto; }
+  }
+</style>

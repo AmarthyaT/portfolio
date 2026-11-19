@@ -1,0 +1,127 @@
+---
+/* Farebox recovery, computed from BMTC_Financials.csv (traffic revenue ÷ operating expenditure). */
+const years = [
+  { label: '18', value: 72.2 },
+  { label: '19', value: 69.6 },
+  { label: '20', value: 67.7 },
+  { label: '21', value: 34.7, note: 'COVID' },
+  { label: '22', value: 40.2 },
+  { label: '23', value: 53.8 },
+  { label: '24', value: 65.5 },
+  { label: '25', value: 60.6, current: true },
+];
+
+const plotX = 52;
+const plotRight = 700;
+const plotTop = 34;
+const plotBottom = 272;
+const scale = plotBottom - plotTop; // 100% -> 238px
+const barW = 48;
+const step = 76;
+const start = 66;
+const ticks = [0, 25, 50, 75, 100];
+---
+
+<svg viewBox="0 0 720 366" role="img" aria-label="BMTC farebox recovery by financial year, 2018 to 2025">
+  <text class="mini" x="16" y="16">PERCENT OF OPERATING COST RECOVERED</text>
+
+  {ticks.map((tick) => {
+    const y = plotBottom - (tick / 100) * scale;
+    return (
+      <g>
+        <line class="tick" x1={plotX} y1={y} x2={plotRight} y2={y} />
+        <text class="ticklabel" x={plotX - 8} y={y + 3} text-anchor="end">{tick}</text>
+      </g>
+    );
+  })}
+
+  {years.map((yr, i) => {
+    const x = start + i * step;
+    const h = (yr.value / 100) * scale;
+    const y = plotBottom - h;
+    return (
+      <g>
+        <rect class={yr.current ? 'bar bar--current' : 'bar'} x={x} y={y} width={barW} height={h} />
+        <text class="value" x={x + barW / 2} y={y - 7} text-anchor="middle">{yr.value.toFixed(1)}</text>
+        <text class={yr.current ? 'year year--current' : 'year'} x={x + barW / 2} y={plotBottom + 18} text-anchor="middle">FY{yr.label}</text>
+        {yr.note && <text class="note" x={x + barW / 2} y={y - 21} text-anchor="middle">{yr.note}</text>}
+      </g>
+    );
+  })}
+
+  <line class="baseline" x1={plotX} y1={plotBottom} x2={plotRight} y2={plotBottom} />
+
+  <line class="rule" x1="16" y1="306" x2="704" y2="306" />
+  <text class="foot" x="16" y="322">Farebox recovery is traffic revenue over operating expenditure. Before FY2023-24 the operating split is not published,</text>
+  <text class="foot" x="16" y="335">so total expenditure is used. Excluding the Shakti reimbursement, FY2024-25 cash recovery is an estimated 27–28%.</text>
+  <text class="foot" x="16" y="352">Source: BMTC audited accounts FY2023-24 and FY2024-25; FPIB series before that.</text>
+</svg>
+
+<style>
+  .bar {
+    fill: rgba(17, 17, 16, 0.82);
+  }
+
+  .bar--current {
+    fill: #d93a1f;
+  }
+
+  .value {
+    font-family: var(--f-mono);
+    font-size: 9px;
+    fill: rgba(17, 17, 16, 0.72);
+  }
+
+  .year {
+    font-family: var(--f-mono);
+    font-size: 9px;
+    letter-spacing: 0.04em;
+    fill: rgba(17, 17, 16, 0.55);
+  }
+
+  .year--current {
+    fill: #b3301a;
+  }
+
+  .note {
+    font-family: var(--f-mono);
+    font-size: 7.5px;
+    letter-spacing: 0.1em;
+    fill: rgba(17, 17, 16, 0.42);
+  }
+
+  .tick {
+    stroke: rgba(17, 17, 16, 0.11);
+    stroke-width: 1;
+  }
+
+  .ticklabel {
+    font-family: var(--f-mono);
+    font-size: 8px;
+    fill: rgba(17, 17, 16, 0.4);
+  }
+
+  .baseline {
+    stroke: rgba(17, 17, 16, 0.4);
+    stroke-width: 1;
+  }
+
+  .mini {
+    font-family: var(--f-mono);
+    font-size: 8px;
+    letter-spacing: 0.18em;
+    fill: rgba(17, 17, 16, 0.42);
+  }
+
+  .rule {
+    stroke: rgba(17, 17, 16, 0.16);
+    stroke-width: 1;
+  }
+
+  .foot {
+    font-family: var(--f-serif);
+    font-size: 10.5px;
+    font-style: italic;
+    fill: rgba(17, 17, 16, 0.5);
+  }
+</style>

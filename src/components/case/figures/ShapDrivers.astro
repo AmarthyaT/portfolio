@@ -1,0 +1,111 @@
+---
+/* Top loci by mean |SHAP| — values copied from results/tables/top_driver_mutations.csv. */
+const rows = [
+  { gene: 'katG', locus: 'S315T', value: 1.158, kind: 'driver' },
+  { gene: 'rpoB', locus: 'S450L', value: 1.037, kind: 'driver' },
+  { gene: 'novM', locus: 'G214R efflux', value: 0.738, kind: 'novel' },
+  { gene: 'gyrA', locus: 'D94G', value: 0.735, kind: 'driver' },
+  { gene: 'embB', locus: 'M306V', value: 0.458, kind: 'driver' },
+  { gene: 'inhA', locus: 'C-15T', value: 0.438, kind: 'driver' },
+  { gene: 'pncA', locus: 'H57D', value: 0.142, kind: 'driver' },
+  { gene: '—', locus: 'pos 2300035 T>C', value: 0.137, kind: 'passenger' },
+  { gene: '—', locus: 'pos 2010034 C>A', value: 0.135, kind: 'passenger' },
+  { gene: 'novM', locus: 'L108P TM2', value: 0.079, kind: 'novel' },
+];
+
+const max = 1.2;
+const left = 232;
+const width = 412;
+const top = 26;
+const row = 29;
+---
+
+<svg viewBox="0 0 720 344" role="img" aria-label="Mean SHAP values for the top ten TB resistance loci">
+  <text class="mini" x="16" y="14">MEAN |SHAP|</text>
+  <text class="mini" x={left + width} y="14" text-anchor="end">0 → 1.2</text>
+
+  {rows.map((item, i) => {
+    const y = top + i * row;
+    const w = (item.value / max) * width;
+    const cls = item.kind === 'novel' ? 'bar bar--novel' : item.kind === 'passenger' ? 'bar bar--passenger' : 'bar';
+    return (
+      <g>
+        <line class="grid" x1={left} y1={y + 14} x2={left + width} y2={y + 14} />
+        <text class="gene" x="16" y={y + 12}>{item.gene === '—' ? 'NEUTRAL' : item.gene.toUpperCase()}</text>
+        <text class="locus" x="88" y={y + 12}>{item.locus}</text>
+        <rect class={cls} x={left} y={y + 4} width={Math.max(w, 1.5)} height="12" />
+        <text class="value" x={left + w + 8} y={y + 13}>{item.value.toFixed(3)}</text>
+        {item.kind === 'novel' && <text class="flag" x={left + w + 46} y={y + 13}>CANDIDATE</text>}
+      </g>
+    );
+  })}
+
+  <line class="rule" x1="16" y1="322" x2="704" y2="322" />
+  <text class="foot" x="16" y="337">XGBoost, held-out test set. The two neutral loci are retained to show the ranking separating them.</text>
+</svg>
+
+<style>
+  .grid {
+    stroke: rgba(17, 17, 16, 0.1);
+    stroke-width: 1;
+  }
+
+  .bar {
+    fill: #23221f;
+  }
+
+  .bar--novel {
+    fill: #d93a1f;
+  }
+
+  .bar--passenger {
+    fill: rgba(17, 17, 16, 0.22);
+  }
+
+  .gene {
+    font-family: var(--f-mono);
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    fill: #111110;
+  }
+
+  .locus {
+    font-family: var(--f-serif);
+    font-size: 11.5px;
+    font-style: italic;
+    fill: rgba(17, 17, 16, 0.62);
+  }
+
+  .value {
+    font-family: var(--f-mono);
+    font-size: 9px;
+    fill: rgba(17, 17, 16, 0.72);
+  }
+
+  .flag {
+    font-family: var(--f-mono);
+    font-size: 7.5px;
+    letter-spacing: 0.12em;
+    fill: #b3301a;
+  }
+
+  .mini {
+    font-family: var(--f-mono);
+    font-size: 8px;
+    letter-spacing: 0.18em;
+    fill: rgba(17, 17, 16, 0.42);
+  }
+
+  .rule {
+    stroke: rgba(17, 17, 16, 0.16);
+    stroke-width: 1;
+  }
+
+  .foot {
+    font-family: var(--f-serif);
+    font-size: 10.5px;
+    font-style: italic;
+    fill: rgba(17, 17, 16, 0.5);
+  }
+</style>

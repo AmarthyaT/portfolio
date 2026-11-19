@@ -1,0 +1,329 @@
+---
+const flagship = [
+  {
+    num: '01',
+    title: 'VERDICT',
+    desc: 'Legal judgment retrieval that refuses to guess.',
+    tags: 'Legal RAG · Python · Streamlit',
+    year: '2026',
+    href: '/work/verdict',
+  },
+  {
+    num: '02',
+    title: 'TB-AMR',
+    desc: 'Predicting tuberculosis drug resistance from 600 genomes.',
+    tags: 'Genomics · XGBoost · TreeSHAP',
+    year: '2026',
+    href: '/work/tb-amr',
+  },
+  {
+    num: '03',
+    title: 'Karnataka transit',
+    desc: 'What free bus travel actually costs a city.',
+    tags: 'Civic data · 31 sources · Streamlit',
+    year: '2026',
+    href: '/work/karnataka-transit',
+  },
+  {
+    num: '04',
+    title: 'Sweety',
+    desc: 'A clinical glucose tracker with a doctor’s side.',
+    tags: 'Node · Postgres · React · Docker',
+    year: '2026',
+    href: '/work/sweety',
+  },
+];
+
+const supporting = [
+  {
+    title: 'Indian Legal Llama 3.1',
+    desc: 'An 8B model fine-tuned to summarize Indian court proceedings.',
+    tag: 'HF · Unsloth · QLoRA',
+    href: 'https://huggingface.co/Amarthya11/Llama3.1-finetuned-GGUF',
+  },
+  {
+    title: 'Qwen 3.5 Abliterated',
+    desc: 'Refusal directions removed, then measured.',
+    tag: 'HF · alignment research',
+    href: 'https://huggingface.co/Amarthya11/QWEN352B',
+  },
+  {
+    title: 'LeetLog',
+    desc: 'Spaced repetition for LeetCode, synced from the GraphQL API.',
+    tag: 'Next.js · Supabase · FSRS',
+    href: 'https://github.com/AmarthyaT/leetlog',
+  },
+  {
+    title: 'Butterfly Engine',
+    desc: 'Forecasting supply-chain collapse with hypergraphs.',
+    tag: 'In progress · causal inference',
+    href: 'https://github.com/AmarthyaT',
+  },
+  {
+    title: 'ColabSwarm',
+    desc: 'Layer-split inference on preemptible GPUs; measuring what a worker dying mid-token costs.',
+    tag: 'In progress · distributed systems · no result yet',
+    href: null,
+  },
+];
+---
+
+<section class="section" id="work">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow">01 — Selected work</span>
+      <h2 class="display">Four systems,<br />four substrates.</h2>
+      <p class="sec-head__note">
+        Each row opens a case file: method, real figures, and a known-limits section. Repositories are
+        linked inside.
+      </p>
+    </div>
+
+    <ol class="work">
+      {flagship.map((item) => (
+        <li>
+          <a
+            class="case"
+            href={item.href}
+            target={item.href.startsWith('http') ? '_blank' : undefined}
+            rel={item.href.startsWith('http') ? 'noopener' : undefined}
+          >
+            <span class="case__num">{item.num}</span>
+            <span class="case__title">{item.title}</span>
+            <span class="case__desc">{item.desc}</span>
+            <span class="case__tags">{item.tags}</span>
+            <span class="case__year">{item.year}</span>
+            <span class="case__arrow" aria-hidden="true">{item.href.startsWith('http') ? '↗' : '→'}</span>
+          </a>
+        </li>
+      ))}
+    </ol>
+
+    <div class="also">
+      <div class="also__head">
+        <span class="eyebrow">Also in the field</span>
+        <span class="eyebrow">02 models · 01 product · 02 in progress</span>
+      </div>
+      <ul class="also__list">
+        {supporting.map((item) => {
+          const Tag = item.href ? 'a' : 'div';
+          return (
+            <li>
+              <Tag
+                class:list={['mini', { 'mini--static': !item.href }]}
+                href={item.href ?? undefined}
+                target={item.href ? '_blank' : undefined}
+                rel={item.href ? 'noopener' : undefined}
+              >
+                <span class="mini__title">{item.title}</span>
+                <span class="mini__desc">{item.desc}</span>
+                <span class="mini__tag">{item.tag}</span>
+                <span class="mini__arrow" aria-hidden="true">{item.href ? '↗' : '—'}</span>
+              </Tag>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  .work {
+    list-style: none;
+  }
+
+  .case {
+    display: grid;
+    grid-template-columns: 46px minmax(0, 1.25fr) minmax(0, 1.55fr) minmax(0, 0.95fr) 56px 20px;
+    gap: 18px;
+    align-items: baseline;
+    padding: 26px 12px 24px 0;
+    border-bottom: 1px solid var(--rule);
+    transition: background var(--fast) var(--ease);
+  }
+
+  .case:hover {
+    background: color-mix(in srgb, var(--ink) 3.5%, transparent);
+  }
+
+  .case__num {
+    font-family: var(--f-mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    color: var(--ink-faint);
+    transition: color var(--fast) var(--ease);
+  }
+
+  .case:hover .case__num {
+    color: var(--accent);
+  }
+
+  .case__title {
+    font-family: var(--f-display);
+    font-size: clamp(20px, 2.1vw, 27px);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+    line-height: 1.05;
+    transition: transform var(--med) var(--ease);
+  }
+
+  .case:hover .case__title {
+    transform: translateX(6px);
+  }
+
+  .case__desc {
+    font-family: var(--f-serif);
+    font-size: 16px;
+    font-style: italic;
+    line-height: 1.35;
+    color: var(--ink-soft);
+  }
+
+  .case__tags,
+  .case__year {
+    font-family: var(--f-mono);
+    font-size: 10px;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  .case__year {
+    text-align: right;
+  }
+
+  .case__arrow {
+    font-family: var(--f-mono);
+    font-size: 14px;
+    color: var(--ink-faint);
+    justify-self: end;
+    transition: color var(--fast) var(--ease), transform var(--med) var(--ease);
+  }
+
+  .case:hover .case__arrow {
+    color: var(--accent);
+    transform: translate(2px, -2px);
+  }
+
+  /* ---------- supporting ---------- */
+
+  .also {
+    margin-top: clamp(44px, 6vw, 72px);
+  }
+
+  .also__head {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .also__list {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 32px;
+  }
+
+  .mini {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 2px 16px;
+    padding: 18px 0 20px;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .mini__title {
+    font-family: var(--f-display);
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    transition: color var(--fast) var(--ease);
+  }
+
+  .mini:hover .mini__title {
+    color: var(--accent);
+  }
+
+  .mini--static {
+    cursor: default;
+  }
+
+  .mini--static:hover .mini__title {
+    color: inherit;
+  }
+
+  .mini__desc {
+    grid-column: 1;
+    font-family: var(--f-serif);
+    font-size: 14px;
+    font-style: italic;
+    color: var(--ink-soft);
+    line-height: 1.4;
+  }
+
+  .mini__tag {
+    grid-column: 1;
+    font-family: var(--f-mono);
+    font-size: 9.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-top: 6px;
+  }
+
+  .mini__arrow {
+    grid-column: 2;
+    grid-row: 1;
+    font-family: var(--f-mono);
+    font-size: 12px;
+    color: var(--ink-faint);
+  }
+
+  @media (max-width: 980px) {
+    .case {
+      grid-template-columns: 38px minmax(0, 1fr) 44px;
+      gap: 8px 14px;
+      padding-block: 22px;
+    }
+
+    .case__desc {
+      grid-column: 2;
+      font-size: 15px;
+    }
+
+    .case__tags {
+      grid-column: 2;
+      margin-top: 2px;
+    }
+
+    .case__year {
+      display: none;
+    }
+
+    .case__arrow {
+      grid-row: 1;
+      grid-column: 3;
+    }
+  }
+
+  @media (max-width: 720px) {
+    .also__list {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  @media (max-width: 480px) {
+    .case {
+      grid-template-columns: 26px minmax(0, 1fr) 28px;
+      gap: 8px 12px;
+    }
+
+    .case__title {
+      font-size: 19px;
+    }
+  }
+</style>

@@ -1,0 +1,81 @@
+---
+interface Props {
+  num: string;
+  title: string;
+  caption: string;
+}
+
+const { num, title, caption } = Astro.props;
+---
+
+<figure class="cplate">
+  <figcaption class="cplate__head">
+    <span>Fig. {num}</span>
+    <span class="cplate__title">{title}</span>
+  </figcaption>
+
+  <div class="cplate__stage">
+    <slot />
+  </div>
+
+  <figcaption class="cplate__cap">{caption}</figcaption>
+</figure>
+
+<style>
+  .cplate {
+    margin-block: clamp(26px, 3.4vw, 40px) clamp(8px, 1.4vw, 16px);
+    border: 1px solid var(--rule-strong);
+    background: var(--paper-raise);
+  }
+
+  .cplate__head {
+    display: flex;
+    justify-content: space-between;
+    gap: 18px;
+    padding: 9px 14px;
+    border-bottom: 1px solid var(--rule);
+    font-family: var(--f-mono);
+    font-size: 9.5px;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  .cplate__title {
+    text-align: right;
+    color: var(--ink-soft);
+  }
+
+  .cplate__stage {
+    padding: clamp(14px, 2vw, 24px);
+  }
+
+  .cplate__stage :global(svg) {
+    width: 100%;
+    height: auto;
+  }
+
+  .cplate__cap {
+    padding: 10px 14px 12px;
+    border-top: 1px solid var(--rule);
+    font-family: var(--f-serif);
+    font-size: 13px;
+    font-style: italic;
+    line-height: 1.45;
+    color: var(--ink-soft);
+  }
+
+  /* Diagrams are drawn at 720 units wide. On a phone that is unreadable at
+     fit-width, so let the stage pan instead of shrinking the type. */
+  @media (max-width: 700px) {
+    .cplate__stage {
+      overflow-x: auto;
+      overscroll-behavior-x: contain;
+      padding-inline: 12px;
+    }
+
+    .cplate__stage :global(svg) {
+      min-width: 560px;
+    }
+  }
+</style>

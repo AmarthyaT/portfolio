@@ -1,0 +1,137 @@
+---
+const moves = [
+  {
+    num: 'M.01',
+    title: 'Read the system first',
+    body: 'Before modelling, I read the structure of the evidence: how a judgment is written, how a variant call is filtered, how a fare table is audited.',
+    evidence: ['Statutes', 'VCF calls', 'Fare tables'],
+  },
+  {
+    num: 'M.02',
+    title: 'Build the smallest instrument',
+    body: 'Parent–child retrieval. TreeSHAP. A farebox model. The smallest thing that answers the question, and nothing that does not.',
+    evidence: ['VERDICT', 'TB-AMR', 'BMTC'],
+  },
+  {
+    num: 'M.03',
+    title: 'Measure honestly',
+    body: 'A 0.75 refusal threshold. ROC-AUC and PR-AUC on a held-out split. 60.6% farebox recovery. Every number arrives with the method that produced it.',
+    evidence: ['1,000+ judgments', '600 isolates', 'FY18–FY26'],
+  },
+  {
+    num: 'M.04',
+    title: 'Make it explain itself',
+    body: 'Grounded citations, ranked driver mutations, sourced footnotes, dashboards a non-specialist can drive without calling me.',
+    evidence: ['Citations', 'SHAP', 'Source register'],
+  },
+];
+---
+
+<section class="section" id="method">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow">02 — Method</span>
+      <h2 class="display">The substrate<br />changes. This doesn’t.</h2>
+      <p class="sec-head__note">
+        Four moves, repeated across law, genomics, public finance and model safety.
+      </p>
+    </div>
+
+    <div class="moves">
+      {moves.map((move) => (
+        <article class="move reveal">
+          <div class="move__top">
+            <span class="eyebrow">{move.num}</span>
+            <span class="move__mark" aria-hidden="true"></span>
+          </div>
+          <h3>{move.title}</h3>
+          <p>{move.body}</p>
+          <ul class="move__evidence">
+            {move.evidence.map((e) => <li>{e}</li>)}
+          </ul>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .moves {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1px;
+    background: var(--rule);
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .move {
+    display: flex;
+    flex-direction: column;
+    background: var(--paper);
+    padding: clamp(26px, 3.4vw, 42px) clamp(20px, 3vw, 40px) clamp(28px, 3.2vw, 38px);
+    transition: background var(--med) var(--ease);
+  }
+
+  .move:hover {
+    background: var(--paper-raise);
+  }
+
+  .move__top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: clamp(28px, 4vw, 48px);
+  }
+
+  .move__mark {
+    width: 6px;
+    height: 6px;
+    background: var(--accent);
+  }
+
+  .move h3 {
+    font-family: var(--f-display);
+    font-size: clamp(20px, 2vw, 26px);
+    font-weight: 600;
+    letter-spacing: -0.018em;
+    line-height: 1.1;
+  }
+
+  .move p {
+    margin-top: 12px;
+    max-width: 40ch;
+    color: var(--ink-soft);
+    font-size: 15px;
+    line-height: 1.55;
+  }
+
+  .move__evidence {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0;
+    list-style: none;
+    margin-top: auto;
+    padding-top: 26px;
+    font-family: var(--f-mono);
+    font-size: 9.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  .move__evidence li + li::before {
+    content: '/';
+    margin: 0 7px;
+    color: var(--rule-mid);
+  }
+
+  @media (max-width: 720px) {
+    .moves {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .move__top {
+      margin-bottom: 22px;
+    }
+  }
+</style>

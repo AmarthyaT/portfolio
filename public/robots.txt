@@ -1,0 +1,7 @@
+# Pre-launch: keep the site out of search indexes until it is announced.
+# On launch day, delete the `Disallow: /` line below and redeploy.
+User-agent: *
+Disallow: /
+Disallow: /og
+
+Sitemap: https://amarthya.netlify.app/sitemap.xml

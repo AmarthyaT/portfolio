@@ -1,0 +1,188 @@
+---
+const models = [
+  {
+    num: '01',
+    kind: 'Text generation',
+    title: 'Indian Legal Llama 3.1',
+    desc: 'An 8B model fine-tuned to summarize Indian court proceedings — statutory sections, ratio decidendi, and the reasoning between them.',
+    specs: [
+      ['Base', 'Llama 3.1 8B Instruct'],
+      ['Method', 'Unsloth · 4-bit QLoRA'],
+      ['Formats', 'Q4_K_M · Q8_0 GGUF'],
+      ['Downloads', '69'],
+    ],
+    href: 'https://huggingface.co/Amarthya11/Llama3.1-finetuned-GGUF',
+    link: 'huggingface.co/Amarthya11',
+  },
+  {
+    num: '02',
+    kind: 'Alignment research',
+    title: 'Qwen 3.5 2B, Abliterated',
+    desc: 'Refusal directions located and orthogonalized, then measured. A study in what safety alignment was holding, and what it was not.',
+    specs: [
+      ['Base', 'Qwen 3.5 2B Instruct'],
+      ['Depth', '24 layers'],
+      ['Context', '262,144 tokens'],
+      ['Downloads', '9'],
+    ],
+    href: 'https://huggingface.co/Amarthya11/QWEN352B',
+    link: 'huggingface.co/Amarthya11',
+  },
+];
+---
+
+<section class="section section--dark" id="lab">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow">03 — Model Lab</span>
+      <h2 class="display">Weights,<br />not vibes.</h2>
+      <p class="sec-head__note">
+        Two models trained, quantized and published with cards attached. Download counts read from the Hugging Face API on 16 November 2026.
+      </p>
+    </div>
+
+    <div class="models">
+      {models.map((model) => (
+        <a class="model reveal" href={model.href} target="_blank" rel="noopener">
+          <div class="model__top">
+            <span class="eyebrow">{model.num} — {model.kind}</span>
+            <span class="model__arrow" aria-hidden="true">↗</span>
+          </div>
+
+          <h3>{model.title}</h3>
+          <p class="model__desc">{model.desc}</p>
+
+          <dl class="model__specs">
+            {model.specs.map(([label, value]) => (
+              <div>
+                <dt>{label}</dt>
+                <dd>{value}</dd>
+              </div>
+            ))}
+          </dl>
+
+          <span class="model__link">{model.link}</span>
+        </a>
+      ))}
+    </div>
+
+    <p class="lab__note">
+      The abliterated model is published as a research artifact, with a usage warning and no claim of safety. The point is the measurement, not the uncensoring.
+    </p>
+  </div>
+</section>
+
+<style>
+  .models {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1px;
+    background: var(--lab-rule);
+  }
+
+  .model {
+    display: flex;
+    flex-direction: column;
+    background: var(--lab);
+    border: 1px solid transparent;
+    padding: clamp(24px, 3vw, 36px);
+    transition: background var(--med) var(--ease), border-color var(--med) var(--ease);
+  }
+
+  .model:hover {
+    background: var(--lab-raise);
+    border-color: var(--lab-accent);
+  }
+
+  .model__top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--lab-ink-soft);
+    margin-bottom: clamp(30px, 4vw, 54px);
+  }
+
+  .model:hover .model__arrow {
+    color: var(--lab-accent);
+  }
+
+  .model__arrow {
+    font-family: var(--f-mono);
+    font-size: 13px;
+    transition: color var(--fast) var(--ease);
+  }
+
+  .model h3 {
+    font-family: var(--f-display);
+    font-size: clamp(22px, 2.3vw, 30px);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+    text-transform: uppercase;
+  }
+
+  .model__desc {
+    margin-top: 12px;
+    max-width: 38ch;
+    font-family: var(--f-serif);
+    font-size: 16px;
+    font-style: italic;
+    line-height: 1.45;
+    color: var(--lab-ink-soft);
+  }
+
+  .model__specs {
+    margin-top: auto;
+    padding-top: 28px;
+  }
+
+  .model__specs > div {
+    display: grid;
+    grid-template-columns: 96px minmax(0, 1fr);
+    gap: 12px;
+    padding: 9px 0;
+    border-top: 1px solid var(--lab-rule);
+  }
+
+  .model__specs dt {
+    font-family: var(--f-mono);
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--lab-ink-soft);
+    padding-top: 2px;
+  }
+
+  .model__specs dd {
+    font-family: var(--f-mono);
+    font-size: 11.5px;
+    letter-spacing: 0.02em;
+    color: var(--lab-ink);
+  }
+
+  .model__link {
+    display: block;
+    margin-top: 22px;
+    font-family: var(--f-mono);
+    font-size: 9.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--lab-accent);
+  }
+
+  .lab__note {
+    margin-top: 28px;
+    max-width: 72ch;
+    font-family: var(--f-mono);
+    font-size: 10.5px;
+    line-height: 1.7;
+    letter-spacing: 0.02em;
+    color: var(--lab-ink-soft);
+  }
+
+  @media (max-width: 780px) {
+    .models {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>

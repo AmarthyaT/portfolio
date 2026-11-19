@@ -1,0 +1,30 @@
+---
+import Base from '../layouts/Base.astro';
+import Nav from '../components/Nav.astro';
+import Hero from '../components/Hero.astro';
+import WorkIndex from '../components/WorkIndex.astro';
+import Method from '../components/Method.astro';
+import Lab from '../components/Lab.astro';
+import Elsewhere from '../components/Elsewhere.astro';
+import Signal from '../components/Signal.astro';
+import Colophon from '../components/Colophon.astro';
+---
+
+<Base
+  title="Amarthya Thammappa Gari: machine learning for high-stakes data"
+  description="Machine learning and data systems across legal retrieval, tuberculosis genomics, transit economics, model alignment and clinical software. Bengaluru."
+>
+  <a class="skip" href="#work">Skip to work</a>
+  <Nav />
+
+  <main id="main">
+    <Hero />
+    <WorkIndex />
+    <Method />
+    <Lab />
+    <Elsewhere />
+    <Signal />
+  </main>
+
+  <Colophon />
+</Base>

@@ -1,0 +1,33 @@
+---
+---
+
+<aside class="limits">
+  <div class="prose">
+    <slot />
+  </div>
+</aside>
+
+<style>
+  .limits {
+    margin-top: clamp(30px, 4vw, 44px);
+    padding: 2px 0 4px 22px;
+    border-left: 2px solid var(--accent);
+  }
+
+  .limits > .eyebrow {
+    display: block;
+    margin-bottom: 12px;
+    color: var(--accent);
+  }
+
+  .limits > .eyebrow {
+    display: block;
+    margin-bottom: 12px;
+    color: var(--accent);
+  }
+
+  .limits :global(.prose p) {
+    font-size: 16px;
+    color: var(--ink-soft);
+  }
+</style>

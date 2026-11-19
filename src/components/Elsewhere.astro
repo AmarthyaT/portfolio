@@ -1,0 +1,94 @@
+---
+const ledger = [
+  {
+    label: 'Chess',
+    body: 'Competitive player on the regional circuit. Pattern recognition under a clock, which is most of the job.',
+  },
+  {
+    label: 'Model UN',
+    body: 'Deputy Secretary General, AIMUN-SOC. USG & Head of Finance, AICON 2025. Head of Sponsorships, AICON 2026.',
+  },
+  {
+    label: 'Award',
+    body: 'First place, Mathematics in Real Life — eigenvectors and matrix multiplication for image blur, unblur and edge detection.',
+  },
+  {
+    label: 'Hackathon',
+    body: 'Third place, Indian Data Club — credit-risk prediction, from exploratory analysis to a scored model.',
+  },
+  {
+    label: 'Certifications',
+    body: 'KNIME Data Science Professional. Networking and Administration Fundamentals, LinkedIn Learning.',
+  },
+  {
+    label: 'Languages',
+    body: 'English C2 · Telugu native · Kannada C1 · Tamil · Hindi B1.',
+  },
+];
+---
+
+<section class="section section--tight" id="elsewhere">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow">04 — Elsewhere</span>
+      <h2 class="display">Off the<br />clock.</h2>
+      <p class="sec-head__note">
+        The parts of the record that don’t fit in a repository.
+      </p>
+    </div>
+
+    <dl class="ledger">
+      {ledger.map((row) => (
+        <div class="ledger__row reveal">
+          <dt>{row.label}</dt>
+          <dd>{row.body}</dd>
+        </div>
+      ))}
+    </dl>
+  </div>
+</section>
+
+<style>
+  .ledger {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: clamp(28px, 5vw, 72px);
+  }
+
+  .ledger__row {
+    display: grid;
+    grid-template-columns: 104px minmax(0, 1fr);
+    gap: 18px;
+    padding: 20px 0 24px;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .ledger dt {
+    font-family: var(--f-mono);
+    font-size: 9.5px;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    padding-top: 4px;
+  }
+
+  .ledger dd {
+    font-family: var(--f-serif);
+    font-size: 15.5px;
+    line-height: 1.5;
+    color: var(--ink);
+  }
+
+  @media (max-width: 880px) {
+    .ledger {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  @media (max-width: 520px) {
+    .ledger__row {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 6px;
+    }
+  }
+</style>

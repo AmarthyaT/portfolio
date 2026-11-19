@@ -1,0 +1,83 @@
+---
+import Base from '../layouts/Base.astro';
+import Nav from '../components/Nav.astro';
+import Colophon from '../components/Colophon.astro';
+---
+
+<Base
+  title="404 — Amarthya T."
+  description="This page is not in the record."
+>
+  <Nav />
+
+  <main id="main" class="nf">
+    <div class="wrap">
+      <div class="nf__meta">
+        <span class="eyebrow">Error 404</span>
+        <span class="eyebrow">No record at this path</span>
+      </div>
+
+      <h1 class="display nf__title">Not<br />found.</h1>
+
+      <p class="nf__body">
+        The page you asked for is not in the index. It may have moved, or it may never have
+        existed — this site is small enough that both are checkable. The work is <a href="/#work">here</a>.
+      </p>
+
+      <div class="nf__actions">
+        <a class="btn btn--solid" href="/">Return to the index <span class="btn__arrow" aria-hidden="true">→</span></a>
+      </div>
+    </div>
+  </main>
+
+  <Colophon />
+</Base>
+
+<style>
+  .nf {
+    min-height: 62vh;
+    padding-block: clamp(40px, 6vw, 88px) clamp(64px, 8vw, 120px);
+  }
+
+  .nf__meta {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--rule);
+    color: var(--ink-faint);
+  }
+
+  .nf__title {
+    margin-top: clamp(32px, 6vw, 72px);
+    font-size: clamp(64px, 13vw, 190px);
+    line-height: 0.82;
+    letter-spacing: -0.04em;
+  }
+
+  .nf__body {
+    max-width: 44ch;
+    margin-top: clamp(24px, 3vw, 36px);
+    font-family: var(--f-serif);
+    font-size: clamp(18px, 1.7vw, 22px);
+    line-height: 1.5;
+    color: var(--ink-soft);
+  }
+
+  .nf__body a {
+    color: var(--ink);
+    border-bottom: 1px solid var(--rule-mid);
+  }
+
+  .nf__body a:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+
+  .nf__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: clamp(30px, 4vw, 48px);
+  }
+</style>

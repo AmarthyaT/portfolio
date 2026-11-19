@@ -1,0 +1,198 @@
+---
+import CasePage from '../../components/case/CasePage.astro';
+import Section from '../../components/case/Section.astro';
+import Plate from '../../components/case/Plate.astro';
+import Limits from '../../components/case/Limits.astro';
+import FareboxRecovery from '../../components/case/figures/FareboxRecovery.astro';
+
+const figures = [
+  ['60.6%', 'Farebox recovery, FY2024-25'],
+  ['₹670.48 cr', 'Net loss, FY2024-25'],
+  ['₹2,726.78 cr', 'Accumulated losses'],
+  ['₹815.96 cr', 'Rise in current liabilities in one year'],
+  ['₹51,286 cr', 'Five guarantee schemes, 2026-27'],
+  ['12%', 'Share of expenditure excluding debt repayment'],
+  ['₹1,081–1,141 cr', 'Estimated Shakti share of traffic revenue'],
+  ['27–28%', 'Cash farebox recovery after that adjustment'],
+];
+---
+
+<CasePage
+  num="03"
+  domain="Public finance · transport"
+  title="Karnataka transit"
+  subtitle="What free bus travel costs, and who pays for it."
+  abstract="Karnataka's five guarantee schemes cost ₹51,286 crore in 2026-27, 12% of expenditure excluding debt repayment. BMTC recovered 60.6% of its operating cost in FY2024-25 — before the Shakti reimbursement is counted. This case file follows the gap between the two numbers."
+  description="An evidence-based study of Karnataka's guarantee schemes, BMTC farebox recovery, and the affordability of public transport."
+  year="2026"
+  status="Independent research package"
+  stack="Python · pandas · Plotly · 31 sources"
+  spec={[
+    { label: 'Problem', value: 'A scheme that pays for bus travel is also a transport subsidy, and the accounts do not say so.' },
+    { label: 'Constraint', value: 'BMTC does not disclose a Shakti line; the November 2026 fare chart was unpublished at the cut-off.' },
+    { label: 'Approach', value: '31 sources, seven datasets, verification labels, a bounded estimate and a scenario model.' },
+    { label: 'Result', value: 'Shakti is an estimated ₹1,081–1,141 crore of ₹2,039.09 crore traffic revenue; cash recovery is 27–28%.' },
+  ]}
+  links={[
+    { label: 'Code', href: 'https://github.com/AmarthyaT/karnataka-transport-research' },
+    { label: 'Report', href: 'https://github.com/AmarthyaT/karnataka-transport-research/blob/main/report/Karnataka_Transport_Research_Report.md' },
+    { label: 'Sources', href: 'https://github.com/AmarthyaT/karnataka-transport-research/blob/main/evidence/SOURCES.md' },
+  ]}
+  contents={[
+    { id: 'question', label: 'The question' },
+    { id: 'evidence', label: 'The evidence' },
+    { id: 'result', label: 'The result' },
+    { id: 'fares', label: 'The fare revisions' },
+    { id: 'limits', label: 'Known limits' },
+  ]}
+  sources={[
+    { label: 'Audited accounts', note: 'BMTC FY2023-24 and FY2024-25.' },
+    { label: 'Source register', note: 'S01–S31, with access dates and labels.' },
+    { label: 'Datasets', note: 'Seven CSVs, reproducible generator.' },
+  ]}
+  next={{ num: '04', title: 'Sweety', href: '/work/sweety' }}
+>
+  <Section id="question" num="01" label="The question" title="The subsidy is in the wrong column.">
+    <p>
+      Shakti makes bus travel free for women in Karnataka. It is budgeted as a guarantee scheme,
+      reimbursed to the transport corporations, and reported by BMTC as subsidy income rather than as
+      passenger revenue. That classification is defensible. It also makes a farebox look healthier
+      than the cash position.
+    </p>
+    <p>
+      The question was not whether the scheme is good. It was: what does the published account
+      actually show, and what would change if the reimbursement were paid in full?
+    </p>
+  </Section>
+
+  <Section id="evidence" num="02" label="The evidence" title="A blank cell means not obtained.">
+    <p>
+      Thirty-one sources: BMTC audited accounts, fare charts, PRS budget compilations, FPIB studies, a
+      Lokniti–CSDS evaluation, and the legislature's own replies. Every row in the seven datasets
+      carries a source ID and a verification label.
+    </p>
+    <p>
+      Three distinctions are held throughout. Budget allocations are not spending. Passenger revenue
+      is not government reimbursement. A gap in the record is not a zero. The report states which one
+      each number is, and lists the documents it could not obtain.
+    </p>
+  </Section>
+
+  <Section id="result" num="03" label="The result" title="The farebox, and the number beside it.">
+    <p>
+      Farebox recovery fell from 72.2% in FY2017-18 to 34.7% in the COVID year, then recovered to
+      65.5% before dropping to 60.6% in FY2024-25. The line is not a story of gradual decline; it is a
+      system that never returned to its pre-pandemic base while its cost base kept growing.
+    </p>
+
+    <Fragment slot="figure">
+      <Plate
+        num="03"
+        title="BMTC farebox recovery, FY2018–FY2025"
+        caption="Traffic revenue as a share of operating expenditure, computed from the audited accounts and the FPIB series. The FY2024-25 bar is the year the report centres on."
+      >
+        <FareboxRecovery />
+      </Plate>
+    </Fragment>
+
+    <p>
+      The number beside the farebox is the one the accounts separate. BMTC's traffic revenue in
+      FY2024-25 was ₹2,039.09 crore. The Shakti reimbursement is not a line item, so the report bounds
+      it: ₹1,081–1,141 crore, derived from the scheme's reported ticket value and the corporation's
+      traffic revenue. If that estimate is right, slightly more than half of traffic revenue is
+      government money, and cash farebox recovery is 27–28%.
+    </p>
+
+    <dl class="figures">
+      {figures.map(([value, label]) => (
+        <div class="figures__row">
+          <dt>{value}</dt>
+          <dd>{label}</dd>
+        </div>
+      ))}
+    </dl>
+
+    <p class="mono-note">
+      Also: advertising yields ₹57.54 crore a year — 2.1% of gross revenue and 8.6% of the loss.
+      Non-fare revenue cannot close this gap.
+    </p>
+  </Section>
+
+  <Section id="fares" num="04" label="The fare revisions" title="Both revisions were regressive with respect to distance.">
+    <p>
+      January 2025 raised the minimum fare by 20% and the maximum by 6.7%. November 2026 raised the
+      2 km fare by 66.7% and capped the maximum increment at ₹12. The pattern is the same in both:
+      the shortest journeys absorb the largest proportional increase.
+    </p>
+    <p>
+      Set that against the reimbursement. In the scenario model, paying the Shakti claim in full is
+      worth ₹1,100–1,500 crore a year; the November 2026 fare rise is worth about ₹310 crore in cash.
+      The order of magnitude is the finding: reimbursement is worth four to five times the fare
+      increase, and it does not fall on the passenger.
+    </p>
+  </Section>
+
+  <Section id="limits" num="05" label="Known limits">
+    <Limits>
+      <p>
+        The Shakti share is a bounded estimate, not a disclosed number. BMTC does not publish a
+        Shakti receivable ledger; the range is derived from traffic revenue and the scheme's reported
+        ticket value, and the report labels it as an estimate throughout.
+      </p>
+      <p>
+        The November 2026 stage-wise fare chart had not been published at the data cut-off.
+        Stage-level fares in the dataset and dashboard are interpolated from three verified anchors,
+        and must not be quoted as official.
+      </p>
+      <p>
+        FY2025-26 audited accounts were not obtained; that row is revenue only. The scenario model
+        prices the reimbursement against the fare rise; it does not forecast ridership. The work is
+        independent and not affiliated with the Government of Karnataka, BMTC or BMRCL.
+      </p>
+    </Limits>
+  </Section>
+</CasePage>
+
+<style>
+  .figures {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 clamp(24px, 4vw, 56px);
+    margin-top: 28px;
+    border-top: 1px solid var(--rule);
+  }
+
+  .figures__row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .figures dt {
+    order: 2;
+    font-family: var(--f-display);
+    font-size: clamp(17px, 1.6vw, 21px);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    white-space: nowrap;
+  }
+
+  .figures dd {
+    order: 1;
+    font-family: var(--f-mono);
+    font-size: 9.5px;
+    line-height: 1.4;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+
+  @media (max-width: 620px) {
+    .figures {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>

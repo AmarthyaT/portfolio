@@ -1,0 +1,184 @@
+---
+---
+
+<figure class="plate" aria-labelledby="field-label">
+  <div class="plate__head">
+    <span class="eyebrow">Fig. 00 — The Field</span>
+    <span class="plate__live eyebrow"><i aria-hidden="true"></i> Live</span>
+  </div>
+
+  <div class="plate__stage" id="field-stage">
+    <canvas id="field-canvas" aria-hidden="true"></canvas>
+  </div>
+
+  <figcaption class="plate__foot">
+    <div class="plate__text">
+      <span class="eyebrow plate__label" id="field-label">VERDICT</span>
+      <p class="plate__note" id="field-note">Loading the field.</p>
+    </div>
+    <span class="plate__count" id="field-count">01 / 07</span>
+  </figcaption>
+</figure>
+
+<script>
+  import { initField } from '../lib/field/field';
+  import { topologies, type Topo, type TopoId } from '../lib/field/topologies';
+
+  const canvas = document.getElementById('field-canvas') as HTMLCanvasElement | null;
+  const label = document.getElementById('field-label');
+  const note = document.getElementById('field-note');
+  const count = document.getElementById('field-count');
+  const buttons = Array.from(document.querySelectorAll<HTMLButtonElement>('.substrate'));
+  const list = topologies();
+
+  if (canvas && label && note && count) {
+    let current = 0;
+
+    const render = (topo: Topo, index: number) => {
+      current = index;
+      label.textContent = topo.long.toUpperCase();
+      note.textContent = topo.note;
+      count.textContent = `${String(index + 1).padStart(2, '0')} / ${String(list.length).padStart(2, '0')}`;
+      buttons.forEach((btn, i) => {
+        const on = i === index;
+        btn.setAttribute('aria-selected', String(on));
+        btn.tabIndex = on ? 0 : -1;
+      });
+    };
+
+    const field = initField(canvas, { onSelect: render });
+
+    buttons.forEach((btn, i) => {
+      btn.addEventListener('click', () => {
+        field.select(btn.dataset.topo as TopoId);
+        btn.focus({ preventScroll: true });
+      });
+
+      btn.addEventListener('keydown', (event) => {
+        let next = -1;
+        if (event.key === 'ArrowRight' || event.key === 'ArrowDown') next = (i + 1) % buttons.length;
+        if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') next = (i - 1 + buttons.length) % buttons.length;
+        if (event.key === 'Home') next = 0;
+        if (event.key === 'End') next = buttons.length - 1;
+        if (next < 0) return;
+        event.preventDefault();
+        buttons[next].focus();
+        field.select(buttons[next].dataset.topo as TopoId);
+      });
+    });
+
+    /* clicking the plate advances to the next substrate */
+    canvas.addEventListener('click', () => {
+      const next = list[(current + 1) % list.length];
+      field.select(next.id);
+    });
+
+    canvas.addEventListener('keydown', (event) => {
+      if (event.key !== 'Enter' && event.key !== ' ') return;
+      event.preventDefault();
+      const next = list[(current + 1) % list.length];
+      field.select(next.id);
+    });
+
+    canvas.tabIndex = 0;
+    canvas.setAttribute('role', 'button');
+    canvas.setAttribute('aria-label', 'The Field — advance to the next substrate');
+  }
+</script>
+
+<style>
+  .plate {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    border: 1px solid var(--rule-strong);
+    background: var(--paper-deep);
+    min-height: 100%;
+  }
+
+  .plate__head,
+  .plate__foot {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 10px 14px;
+  }
+
+  .plate__head {
+    align-items: center;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .plate__live {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--ink-soft);
+  }
+
+  .plate__live i {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--accent);
+    animation: blink 2.4s steps(1, end) infinite;
+  }
+
+  @keyframes blink {
+    0%, 60% { opacity: 1; }
+    61%, 100% { opacity: 0.15; }
+  }
+
+  .plate__stage {
+    position: relative;
+    flex: 1;
+    min-height: clamp(330px, 46vh, 540px);
+    cursor: crosshair;
+  }
+
+  canvas {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 900ms var(--ease);
+  }
+
+  canvas[data-ready] {
+    opacity: 1;
+  }
+
+  .plate__foot {
+    align-items: flex-start;
+    border-top: 1px solid var(--rule);
+  }
+
+  .plate__label {
+    display: block;
+    margin-bottom: 5px;
+    color: var(--accent);
+  }
+
+  .plate__note {
+    font-family: var(--f-serif);
+    font-size: 14px;
+    line-height: 1.4;
+    color: var(--ink-soft);
+    max-width: 52ch;
+  }
+
+  .plate__count {
+    flex: none;
+    font-family: var(--f-mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    color: var(--ink-faint);
+    padding-top: 2px;
+  }
+
+  @media (max-width: 860px) {
+    .plate__stage {
+      min-height: 300px;
+    }
+  }
+</style>

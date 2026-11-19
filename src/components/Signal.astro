@@ -1,0 +1,134 @@
+---
+---
+
+<section class="section contact" id="contact">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow">05 — Signal</span>
+      <h2 class="display">Write<br />to me.</h2>
+      <p class="sec-head__note">
+        Open to ML engineering, data analysis and research roles. Bengaluru, IST.
+      </p>
+    </div>
+
+    <div class="contact__grid">
+      <a class="contact__mail reveal" href="mailto:tamarthya@gmail.com">
+        <span class="contact__label eyebrow">Email</span>
+        <span class="contact__address">tamarthya@gmail.com</span>
+        <span class="contact__arrow" aria-hidden="true">→</span>
+      </a>
+
+      <div class="contact__side">
+        <a class="contact__row" href="tel:+917795216679">
+          <span class="eyebrow">Phone</span>
+          <span>+91 77952 16679</span>
+        </a>
+        <a class="contact__row" href="https://github.com/AmarthyaT" target="_blank" rel="noopener">
+          <span class="eyebrow">GitHub</span>
+          <span>AmarthyaT ↗</span>
+        </a>
+        <a class="contact__row" href="https://huggingface.co/Amarthya11" target="_blank" rel="noopener">
+          <span class="eyebrow">Hugging Face</span>
+          <span>Amarthya11 ↗</span>
+        </a>
+        <a class="contact__row" href="https://linkedin.com/in/amarthyat" target="_blank" rel="noopener">
+          <span class="eyebrow">LinkedIn</span>
+          <span>amarthyat ↗</span>
+        </a>
+        <a class="contact__row" href="/Amarthya_T_Resume_cr.pdf" download>
+          <span class="eyebrow">Document</span>
+          <span>Curriculum vitae ↓</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .contact__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+    gap: clamp(28px, 5vw, 72px);
+    padding-top: clamp(30px, 4vw, 52px);
+  }
+
+  .contact__mail {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-self: start;
+    padding-bottom: 18px;
+    border-bottom: 1px solid var(--rule-strong);
+  }
+
+  .contact__label {
+    color: var(--ink-faint);
+  }
+
+  .contact__address {
+    display: block;
+    margin-top: 14px;
+    font-family: var(--f-display);
+    font-size: clamp(26px, 4.4vw, 56px);
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    transition: color var(--fast) var(--ease);
+    word-break: break-word;
+  }
+
+  .contact__mail:hover .contact__address {
+    color: var(--accent);
+  }
+
+  .contact__arrow {
+    position: absolute;
+    right: 0;
+    bottom: 20px;
+    font-size: 22px;
+    color: var(--ink-faint);
+    transition: transform var(--med) var(--ease), color var(--fast) var(--ease);
+  }
+
+  .contact__mail:hover .contact__arrow {
+    transform: translateX(6px);
+    color: var(--accent);
+  }
+
+  .contact__side {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .contact__row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 18px;
+    padding: 13px 0;
+    border-bottom: 1px solid var(--rule);
+    font-family: var(--f-mono);
+    font-size: 12px;
+    letter-spacing: 0.02em;
+    color: var(--ink-soft);
+    transition: color var(--fast) var(--ease);
+  }
+
+  .contact__row .eyebrow {
+    color: var(--ink-faint);
+  }
+
+  .contact__row:hover {
+    color: var(--accent);
+  }
+
+  @media (max-width: 820px) {
+    .contact__grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .contact__arrow {
+      bottom: 22px;
+    }
+  }
+</style>

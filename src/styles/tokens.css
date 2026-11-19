@@ -1,0 +1,49 @@
+/* ==========================================================================
+   STATE SPACE — design tokens
+   Paper, ink, one accent. No gradients, no glass.
+   ========================================================================== */
+
+:root {
+  /* surface */
+  --paper: #f2efe6;
+  --paper-deep: #e8e3d7;
+  --paper-raise: #f7f5ee;
+
+  /* ink */
+  --ink: #111110;
+  --ink-soft: #57544c;
+  --ink-faint: #6f6a5f;
+
+  /* rules */
+  --rule: rgba(17, 17, 16, 0.16);
+  --rule-mid: rgba(17, 17, 16, 0.32);
+  --rule-strong: rgba(17, 17, 16, 0.62);
+
+  /* accent */
+  --accent: #d93a1f;
+  --accent-ink: #a82a15;
+  --accent-wash: rgba(217, 58, 31, 0.09);
+
+  /* lab */
+  --lab: #0b0b0c;
+  --lab-raise: #141416;
+  --lab-ink: #edeae1;
+  --lab-ink-soft: #9a968c;
+  --lab-rule: rgba(237, 234, 225, 0.16);
+  --lab-accent: #ff4d1f;
+
+  /* type */
+  --f-display: 'Archivo Variable', 'Helvetica Neue', Arial, sans-serif;
+  --f-mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+  --f-serif: 'Newsreader Variable', Georgia, serif;
+
+  /* metrics */
+  --gutter: 24px;
+  --max: 1360px;
+  --nav-h: 64px;
+
+  /* motion */
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --fast: 180ms;
+  --med: 320ms;
+}
